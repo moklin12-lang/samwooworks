@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>아이콘 자동 저장</title>
+</head>
+<body>
+<canvas id="cv" style="display:none"></canvas>
+<script>
+// ── SW 아이콘 Canvas 렌더러 ──────────────────────────────
+function drawSWIcon(size) {
+  const cv  = document.getElementById('cv');
+  cv.width  = size;
+  cv.height = size;
+  const ctx = cv.getContext('2d');
+  const sc  = size / 200; // 200px 기준 스케일
+
+  ctx.clearRect(0, 0, size, size);
+
+  // 1. 배경 (네이비 #1C3B8E, 둥근 모서리)
+  ctx.save();
+  const br = size * 0.18;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, br);
+  ctx.fillStyle = '#1C3B8E';
+  ctx.fill();
+  ctx.restore();
+
+  // 2. 메달 그림자
+  const cx = size * 0.5, cy = size * 0.545;
+  const mr = size * 0.375;
+  ctx.save();
+  ctx.shadowColor = 'rgba(0,0,0,0.35)';
+  ctx.shadowBlur  = sc * 8;
+  ctx.shadowOffsetY = sc * 3;
+  ctx.beginPath(); ctx.arc(cx, cy, mr, 0, Math.PI*2);
+  ctx.fillStyle = '#C8CDD8'; ctx.fill();
+  ctx.restore();
+
+  // 3. 메달 외곽 링 (은색)
+  ctx.beginPath(); ctx.arc(cx, cy, mr, 0, Math.PI*2);
+  ctx.fillStyle = '#C8CDD8'; ctx.fill();
+
+  // 4. 흰 테두리
+  ctx.beginPath(); ctx.arc(cx, cy, mr, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.92)';
+  ctx.lineWidth = sc * 3.5; ctx.stroke();
+
+  // 5. 안쪽 밝은 원
+  ctx.beginPath(); ctx.arc(cx, cy, mr * 0.944, 0, Math.PI*2);
+  ctx.fillStyle = '#E8EBF2'; ctx.fill();
+
+  // 6. 안쪽 테두리
+  ctx.beginPath(); ctx.arc(cx, cy, mr * 0.944, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(176,184,200,0.7)';
+  ctx.lineWidth = sc * 1.5; ctx.stroke();
+
+  // 7. 안쪽 배경 (약간 더 밝게)
+  ctx.beginPath(); ctx.arc(cx, cy, mr * 0.91, 0, Math.PI*2);
+  ctx.fillStyle = '#ECEEF4'; ctx.fill();
+
+  // 8. 방패 (육각형) — 희미하게
+  ctx.save();
+  ctx.globalAlpha = 0.35;
+  const shH = mr * 0.76, shW = mr * 0.52;
+  const shTop = cy - shH * 0.52, shBot = cy + shH * 0.48;
+  ctx.beginPath();
+  ctx.moveTo(cx,         shTop);
+  ctx.lineTo(cx - shW,   shTop + shH * 0.22);
+  ctx.lineTo(cx - shW * 0.92, shBot - shH * 0.12);
+  ctx.lineTo(cx,         shBot);
+  ctx.lineTo(cx + shW * 0.92, shBot - shH * 0.12);
+  ctx.lineTo(cx + shW,   shTop + shH * 0.22);
+  ctx.closePath();
+  ctx.fillStyle   = '#C8D0DC'; ctx.fill();
+  ctx.strokeStyle = '#A8B4C4'; ctx.lineWidth = sc * 1.5; ctx.stroke();
+  // 중앙선
+  ctx.beginPath(); ctx.moveTo(cx, shTop); ctx.lineTo(cx, shBot);
+  ctx.strokeStyle = 'rgba(148,162,180,0.6)'; ctx.lineWidth = sc; ctx.stroke();
+  ctx.restore();
+
+  // 9. SW 텍스트
+  const fs = mr * 1.02;
+  const ty = cy + sc * 4;
+  ctx.save();
+  ctx.font      = `900 italic ${fs}px "Arial Black", Impact, sans-serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+
+  // 그림자
+  ctx.fillStyle = 'rgba(100,40,0,0.4)';
+  ctx.fillText('SW', cx + sc*2.5, ty + sc*2.5);
+
+  // 외곽선
+  ctx.strokeStyle = '#7A4500'; ctx.lineWidth = sc * 6;
+  ctx.lineJoin = 'round'; ctx.strokeText('SW', cx, ty);
+
+  // 골드 그라데이션
+  const grd = ctx.createLinearGradient(cx - fs*0.6, ty - fs*0.5, cx + fs*0.6, ty + fs*0.5);
+  grd.addColorStop(0,   '#FFE040');
+  grd.addColorStop(0.35,'#FFB800');
+  grd.addColorStop(0.7, '#F59A00');
+  grd.addColorStop(1,   '#CC7A00');
+  ctx.fillStyle = grd;
+  ctx.fillText('SW', cx, ty);
+
+  // 하이라이트
+  ctx.strokeStyle = 'rgba(255,238,120,0.55)';
+  ctx.lineWidth = sc * 1.5;
+  ctx.strokeText('SW', cx, ty - sc*1.5);
+  ctx.restore();
+
+  // 10. 경광등 손잡이 (상단 돌출)
+  const ltCY = cy - mr - sc * 1;
+
+  // 기둥
+  ctx.save();
+  ctx.fillStyle   = '#D0D4DE';
+  ctx.strokeStyle = '#B4B9C8'; ctx.lineWidth = sc;
+  ctx.beginPath();
+  ctx.roundRect(cx - sc*5, ltCY - sc*13, sc*10, sc*14, sc*2);
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  // 목(넥)
+  ctx.save();
+  ctx.fillStyle   = '#D8DCE6';
+  ctx.strokeStyle = '#C0C6D2'; ctx.lineWidth = sc;
+  ctx.beginPath();
+  ctx.roundRect(cx - sc*8.5, ltCY - sc*18, sc*17, sc*6, sc*3);
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  // 돔
+  ctx.save();
+  ctx.shadowColor = 'rgba(0,0,0,0.2)'; ctx.shadowBlur = sc*3;
+  ctx.beginPath();
+  ctx.ellipse(cx, ltCY - sc*24, sc*13.5, sc*9.5, 0, 0, Math.PI*2);
+  ctx.fillStyle   = '#D2D6E2'; ctx.fill();
+  ctx.restore();
+
+  ctx.beginPath();
+  ctx.ellipse(cx, ltCY - sc*24, sc*13.5, sc*9.5, 0, 0, Math.PI*2);
+  ctx.strokeStyle = '#B8BEC8'; ctx.lineWidth = sc*1.5; ctx.stroke();
+
+  // 돔 안쪽
+  ctx.beginPath();
+  ctx.ellipse(cx, ltCY - sc*24, sc*7.5, sc*5.5, 0, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(236,240,248,0.8)'; ctx.fill();
+
+  // 돔 하이라이트
+  ctx.beginPath();
+  ctx.ellipse(cx - sc*4, ltCY - sc*27, sc*4.5, sc*3.2, -0.3, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.88)'; ctx.fill();
+
+  return cv.toDataURL('image/png');
+}
+
+// ── Base64 → Blob → 저장용 폼 전송 ──────────────────────
+function b64toBlob(b64, mime) {
+  const bytes = atob(b64.split(',')[1]);
+  const arr   = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+
+// ── 실행 ────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  const png192 = drawSWIcon(192);
+  const png512 = drawSWIcon(512);
+
+  // 두 파일 모두 자동 다운로드
+  [{ data: png192, name: 'icon-192.png' },
+   { data: png512, name: 'icon-512.png' }].forEach(({ data, name }) => {
+    const a = document.createElement('a');
+    a.href     = data;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  document.body.innerHTML = `
+    <div style="font-family:sans-serif;padding:40px;text-align:center;background:#1C3B8E;min-height:100vh;color:#fff;">
+      <h2 style="color:#FFB800;">✅ 다운로드 완료!</h2>
+      <p>icon-192.png / icon-512.png 가 다운로드되었습니다.</p>
+      <p style="color:#93c5fd;font-size:0.9rem;">이 파일을 Genspark 에디터의 icons/ 폴더에 업로드해 주세요.</p>
+    </div>`;
+});
+</script>
+</body>
+</html>

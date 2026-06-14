@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>삼우에프앤지 안전 교육장</title>
+  <meta name="theme-color" content="#1a237e" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+<!-- ===================== 상단 헤더 ===================== -->
+<header class="site-header">
+  <div class="header-left">
+    <div class="header-logo" onclick="switchTab('main')" title="홈으로" style="cursor:pointer;">
+      <div class="logo-shield">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230" width="46" height="53" style="display:block;">
+            <!-- 메달 외곽 링 -->
+            <circle cx="100" cy="122" r="88" fill="#D8DCE4"/>
+            <circle cx="100" cy="122" r="88" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-opacity="0.9"/>
+            <circle cx="100" cy="122" r="82" fill="#F0F2F6"/>
+            <circle cx="100" cy="122" r="82" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.8"/>
+            <circle cx="100" cy="122" r="80" fill="none" stroke="#B8C0CC" stroke-width="1.5"/>
+            <!-- 메달 내부 면 -->
+            <circle cx="100" cy="122" r="78" fill="#ECEEF4"/>
+            <!-- 방패 외곽(베젤) -->
+            <path d="M100,178 L63,162 L61,110 Q61,98 70,91 L100,79 L130,91 Q139,98 139,110 L137,162 Z" fill="#D0D4DE"/>
+            <path d="M86,79 Q93,72 100,68 Q107,72 114,79" fill="none" stroke="#D0D4DE" stroke-width="7" stroke-linecap="round"/>
+            <!-- 방패 내부 -->
+            <path d="M100,174 L66,159 L64,109 Q64,98 72,92 L100,81 L128,92 Q136,98 136,109 L134,159 Z" fill="#E8ECF2"/>
+            <path d="M87,81 Q93,75 100,71 Q107,75 113,81" fill="none" stroke="#E8ECF2" stroke-width="5" stroke-linecap="round"/>
+            <!-- 방패 하이라이트 -->
+            <path d="M100,81 L72,92 Q64,98 64,109 L66,159 L100,174" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.8"/>
+            <path d="M100,81 L128,92 Q136,98 136,109 L134,159 L100,174" fill="none" stroke="#B8C0CC" stroke-width="1" stroke-opacity="0.7"/>
+            <line x1="100" y1="79" x2="100" y2="178" stroke="#C8D0DC" stroke-width="1.2"/>
+            <path d="M100,81 L72,92 Q64,98 64,109 L66,159 L100,174 Z" fill="#FFFFFF" fill-opacity="0.15"/>
+            <!-- SW 그림자 -->
+            <text x="102" y="145" font-family="Arial Black,Impact,sans-serif" font-size="52" font-weight="900" font-style="italic" text-anchor="middle" fill="#7A4000" fill-opacity="0.45" letter-spacing="-2">SW</text>
+            <!-- SW 외곽선 -->
+            <text x="100" y="143" font-family="Arial Black,Impact,sans-serif" font-size="52" font-weight="900" font-style="italic" text-anchor="middle" fill="none" stroke="#7A4800" stroke-width="5" stroke-linejoin="round" letter-spacing="-2">SW</text>
+            <!-- SW 본체 노란색 -->
+            <text x="100" y="143" font-family="Arial Black,Impact,sans-serif" font-size="52" font-weight="900" font-style="italic" text-anchor="middle" fill="#FFB800" letter-spacing="-2">SW</text>
+            <!-- SW 상단 하이라이트 -->
+            <text x="100" y="141" font-family="Arial Black,Impact,sans-serif" font-size="52" font-weight="900" font-style="italic" text-anchor="middle" fill="none" stroke="#FFE566" stroke-width="1.5" stroke-opacity="0.7" letter-spacing="-2">SW</text>
+            <!-- 받침대 -->
+            <path d="M88,45 L112,45 L109,39 L91,39 Z" fill="#D8DCE6" stroke="#C0C6D2" stroke-width="1"/>
+            <rect x="93" y="29" width="14" height="12" rx="2" fill="#D8DCE6" stroke="#C0C6D2" stroke-width="1"/>
+            <rect x="89" y="25" width="22" height="6" rx="3" fill="#DCE0EA" stroke="#C4CAD6" stroke-width="1"/>
+            <line x1="94" y1="26" x2="94" y2="40" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.7"/>
+            <!-- 경광등 돔 -->
+            <ellipse cx="100" cy="19" rx="15" ry="10" fill="#D8DCE6" stroke="#C4CAD6" stroke-width="1.5"/>
+            <ellipse cx="100" cy="19" rx="8" ry="6" fill="#ECEEF4" fill-opacity="0.8"/>
+            <ellipse cx="95" cy="15" rx="4.5" ry="3" fill="#FFFFFF" opacity="0.85"/>
+            <path d="M87,15 Q93,9 100,9 Q107,9 113,15" fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.7" stroke-linecap="round"/>
+            <!-- 광선 -->
+            <g stroke="#C8CCD6" stroke-linecap="round" opacity="0.7">
+              <line x1="100" y1="6"  x2="100" y2="0"  stroke-width="1.5"/>
+              <line x1="111" y1="9"  x2="116" y2="3"  stroke-width="1.5"/>
+              <line x1="118" y1="16" x2="124" y2="12" stroke-width="1.2"/>
+              <line x1="119" y1="23" x2="126" y2="23" stroke-width="1.2"/>
+              <line x1="89"  y1="9"  x2="84"  y2="3"  stroke-width="1.5"/>
+              <line x1="82"  y1="16" x2="76"  y2="12" stroke-width="1.2"/>
+              <line x1="81"  y1="23" x2="74"  y2="23" stroke-width="1.2"/>
+            </g>
+          </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">삼우에프앤지 안전 교육장</span>
+        <span class="logo-greeting" id="header-greeting">안녕하세요, 관리자님</span>
+      </div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="hamburger-btn" id="hamburger-btn" title="메뉴" aria-label="사이드 메뉴 열기">
+      <i class="fas fa-bars"></i>
+    </button>
+    <button class="hdr-icon-btn" title="알림" id="notif-btn">
+      <i class="fas fa-bell"></i>
+      <span class="hdr-badge" id="notif-count">3</span>
+    </button>
+    <button class="hdr-icon-btn" id="mypage-btn" title="내 정보" onclick="openMyPage()">
+      <i class="fas fa-user"></i>
+    </button>
+  </div>
+</header>
+
+<!-- ===== 모바일 사이드패널 오버레이 배경 ===== -->
+<div class="side-overlay" id="side-overlay" onclick="closeSideDrawer()"></div>
+
+<!-- ===================== 상단 탭 네비게이션 ===================== -->
+<nav class="tab-nav" id="tab-nav">
+  <div class="tab-nav-inner">
+    <button class="tab-item active" data-tab="main">
+      <i class="fas fa-home"></i><span>공지</span>
+    </button>
+    <button class="tab-item highlight" data-tab="newcomer">
+      <i class="fas fa-user-plus"></i><span>신규 입사자</span>
+    </button>
+    <button class="tab-item" data-tab="appliance">
+      <i class="fas fa-tv"></i><span>가전 안전</span>
+    </button>
+    <button class="tab-item" data-tab="aircon">
+      <i class="fas fa-wind"></i><span>에어컨 안전</span>
+    </button>
+    <button class="tab-item" data-tab="warehouse">
+      <i class="fas fa-warehouse"></i><span>창고 안전</span>
+    </button>
+    <button class="tab-item" data-tab="regulation">
+      <i class="fas fa-clipboard-list"></i><span>안전 규정</span>
+    </button>
+    <button class="tab-item" data-tab="major-accident">
+      <i class="fas fa-exclamation-triangle"></i><span>중대재해알림</span>
+    </button>
+    <button class="tab-item" data-tab="violation">
+      <i class="fas fa-comment-slash"></i><span>안전미준수사례</span>
+    </button>
+    <button class="tab-item" data-tab="admin">
+      <i class="fas fa-user-cog"></i><span>관리자메뉴</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ===================== 본문 영역 ===================== -->
+<div class="body-wrap">
+
+  <!-- 왼쪽 사이드패널 -->
+  <aside class="side-panel">
+    <p class="side-panel-label" id="side-label">공지</p>
+    <button class="btn-write" id="btn-write" onclick="openWriteModal()">
+      <i class="fas fa-plus"></i> 게시물 작성
+    </button>
+    <div class="post-list" id="post-list">
+      <!-- JS 렌더링 -->
+    </div>
+  </aside>
+
+  <!-- 오른쪽 콘텐츠 뷰어 -->
+  <main class="content-view" id="content-view">
+    <!-- 초기: 선택 안내 -->
+    <div class="empty-guide" id="empty-guide">
+      <div class="empty-guide-icon">
+        <i class="far fa-comment-dots"></i>
+      </div>
+      <p>게시물을 선택해주세요.</p>
+    </div>
+
+    <!-- 게시물 상세 -->
+    <div class="post-detail hidden" id="post-detail">
+      <div class="post-detail-header">
+        <h2 id="detail-title"></h2>
+        <div class="detail-meta" id="detail-meta"></div>
+      </div>
+      <div class="post-detail-body" id="detail-body"></div>
+    </div>
+
+    <!-- ===== 관리자 메뉴 패널 ===== -->
+    <div class="admin-panel hidden" id="admin-panel">
+
+      <!-- 관리자 탭 -->
+      <div class="admin-tab-bar">
+        <button class="admin-tab active" data-atab="members" onclick="switchAdminTab('members')">
+          <i class="fas fa-users"></i> 회원 관리
+        </button>
+        <button class="admin-tab" data-atab="popup" onclick="switchAdminTab('popup')">
+          <i class="fas fa-bullhorn"></i> 팝업 관리
+        </button>
+        <button class="admin-tab" data-atab="stats" onclick="switchAdminTab('stats')">
+          <i class="fas fa-chart-bar"></i> 통계
+        </button>
+      </div>
+
+      <!-- 회원 관리 탭 -->
+      <div class="admin-content" id="atab-members">
+
+        <!-- 서브탭: 승인대기 / 전체회원 -->
+        <div class="member-subtab-wrap">
+          <button class="member-subtab active" id="mstab-pending" onclick="switchMemberSubTab('pending')">
+            <i class="fas fa-clock"></i> 승인 대기
+            <span class="pending-badge" id="pending-badge">0</span>
+          </button>
+          <button class="member-subtab" id="mstab-all" onclick="switchMemberSubTab('all')">
+            <i class="fas fa-list"></i> 전체 회원
+          </button>
+          <button class="member-subtab" id="mstab-approved" onclick="switchMemberSubTab('approved')">
+            <i class="fas fa-check-circle"></i> 승인 완료
+          </button>
+          <button class="member-subtab" id="mstab-rejected" onclick="switchMemberSubTab('rejected')">
+            <i class="fas fa-times-circle"></i> 거부됨
+          </button>
+        </div>
+
+        <!-- 검색 -->
+        <div class="member-search-wrap">
+          <div class="member-search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="member-search-input" placeholder="이름, 아이디, 부서로 검색..." oninput="renderMemberList()" />
+          </div>
+          <button class="member-refresh-btn" onclick="loadMembers()" title="새로고침">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+
+        <!-- 회원 목록 -->
+        <div id="member-list-wrap" class="member-list-wrap">
+          <!-- JS 렌더 -->
+        </div>
+
+      </div>
+
+      <!-- 팝업 관리 탭 -->
+      <div class="admin-content hidden" id="atab-popup">
+
+        <!-- 상태 토글 카드 -->
+        <div class="popup-status-card" id="popup-status-card">
+          <div class="popup-status-left">
+            <div class="popup-status-icon" id="popup-status-icon"><i class="fas fa-bullhorn"></i></div>
+            <div>
+              <div class="popup-status-title">접속 팝업</div>
+              <div class="popup-status-desc" id="popup-status-desc">사용자가 대시보드에 접속할 때 팝업을 표시합니다</div>
+            </div>
+          </div>
+          <label class="popup-toggle-switch">
+            <input type="checkbox" id="popup-enabled-chk" onchange="onPopupToggle(this.checked)" />
+            <span class="popup-toggle-track">
+              <span class="popup-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+
+        <!-- 팝업 편집 폼 -->
+        <div class="popup-edit-section" id="popup-edit-section">
+
+          <div class="popup-edit-header">
+            <h4><i class="fas fa-edit"></i> 팝업 내용 편집</h4>
+            <div class="popup-preview-btn-wrap">
+              <button class="popup-preview-btn" onclick="openPopupPreview()">
+                <i class="fas fa-eye"></i> 미리보기
+              </button>
+            </div>
+          </div>
+
+          <!-- 제목 -->
+          <div class="form-row" style="margin-bottom:14px">
+            <label class="popup-field-label">팝업 제목 <span style="color:#ef4444">*</span></label>
+            <input type="text" id="popup-title-input" class="write-input" placeholder="팝업 제목을 입력하세요" />
+          </div>
+
+          <!-- 팝업 유형 -->
+          <div class="form-row" style="margin-bottom:14px">
+            <label class="popup-field-label">팝업 유형</label>
+            <div class="popup-type-group">
+              <label class="popup-type-item">
+                <input type="radio" name="popup-type" value="notice" checked onchange="onPopupTypeChange()" />
+                <span><i class="fas fa-info-circle"></i> 공지</span>
+              </label>
+              <label class="popup-type-item">
+                <input type="radio" name="popup-type" value="warning" onchange="onPopupTypeChange()" />
+                <span><i class="fas fa-exclamation-triangle"></i> 경고</span>
+              </label>
+              <label class="popup-type-item">
+                <input type="radio" name="popup-type" value="event" onchange="onPopupTypeChange()" />
+                <span><i class="fas fa-star"></i> 이벤트</span>
+              </label>
+              <label class="popup-type-item">
+                <input type="radio" name="popup-type" value="safety" onchange="onPopupTypeChange()" />
+                <span><i class="fas fa-hard-hat"></i> 안전</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 본문 내용 -->
+          <div class="form-row" style="margin-bottom:14px">
+            <label class="popup-field-label">본문 내용 <span style="color:#ef4444">*</span></label>
+            <textarea id="popup-body-input" class="write-textarea" style="min-height:140px" placeholder="팝업에 표시할 내용을 입력하세요..."></textarea>
+          </div>
+
+          <!-- 대상 부서 선택 -->
+          <div class="form-row" style="margin-bottom:14px">
+            <label class="popup-field-label"><i class="fas fa-building" style="color:#3b82f6;margin-right:4px;"></i>표시 대상 부서</label>
+            <select id="popup-target-dept" class="write-input popup-select">
+              <option value="all">📢 전체 (모든 직원)</option>
+              <option value="평택TC">평택TC</option>
+              <option value="인천TC">인천TC</option>
+              <option value="목포TC">목포TC</option>
+              <option value="화성TDC">화성TDC</option>
+              <option value="광주TDC">광주TDC</option>
+              <option value="HVAC">HVAC</option>
+              <option value="냉장사업부">냉장사업부</option>
+            </select>
+            <p style="font-size:0.72rem;color:#94a3b8;margin-top:4px;">
+              <i class="fas fa-info-circle"></i> 특정 부서 선택 시 해당 소속 직원에게만 팝업이 표시됩니다.
+            </p>
+          </div>
+
+          <!-- 2열: 버튼 텍스트 / 표시 기간 -->
+          <div class="popup-form-row2">
+            <div class="form-row">
+              <label class="popup-field-label">닫기 버튼 텍스트</label>
+              <input type="text" id="popup-btn-text" class="write-input" placeholder="확인" />
+            </div>
+            <div class="form-row">
+              <label class="popup-field-label">오늘 하루 안보기</label>
+              <select id="popup-skip-option" class="write-input popup-select">
+                <option value="yes">표시 (하루 안보기 버튼 제공)</option>
+                <option value="no">미표시 (항상 팝업 표시)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 표시 기간 -->
+          <div class="popup-form-row2">
+            <div class="form-row">
+              <label class="popup-field-label">표시 시작일</label>
+              <input type="date" id="popup-date-start" class="write-input" />
+            </div>
+            <div class="form-row">
+              <label class="popup-field-label">표시 종료일 <span style="font-size:0.72rem;color:#94a3b8">(선택, 비우면 무기한)</span></label>
+              <input type="date" id="popup-date-end" class="write-input" />
+            </div>
+          </div>
+
+          <!-- 이미지 첨부 -->
+          <div class="form-row" style="margin-bottom:20px">
+            <label class="popup-field-label">이미지 첨부 <span style="font-size:0.72rem;color:#94a3b8">(선택 · JPG/PNG/GIF · 최대 2MB)</span></label>
+            <div class="attach-drop-zone popup-img-zone" id="popup-img-zone" onclick="document.getElementById('popup-img-input').click()">
+              <i class="fas fa-image attach-drop-icon"></i>
+              <p class="attach-drop-text">클릭하거나 파일을 끌어다 놓으세요</p>
+              <p class="attach-drop-limit">JPG · PNG · GIF / 최대 2MB</p>
+              <input type="file" id="popup-img-input" accept="image/jpeg,image/png,image/gif" hidden />
+            </div>
+            <div id="popup-img-preview-wrap" class="popup-img-preview-wrap hidden">
+              <img id="popup-img-preview" src="" alt="팝업 이미지 미리보기" />
+              <button class="popup-img-remove-btn" onclick="removePopupImage()" title="이미지 제거">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- 저장 버튼 -->
+          <div class="popup-save-row">
+            <button class="popup-reset-btn" onclick="resetPopupForm()">
+              <i class="fas fa-undo"></i> 초기화
+            </button>
+            <button class="popup-save-btn" onclick="savePopupSettings()">
+              <i class="fas fa-save"></i> 팝업 설정 저장
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 통계 탭 -->
+      <div class="admin-content hidden" id="atab-stats">
+
+        <!-- 통계 헤더: 범위 표시 + 새로고침 -->
+        <div class="stats-header-row">
+          <div class="stats-header-left">
+            <i class="fas fa-chart-bar"></i>
+            <span id="stats-scope-label">전체 통계</span>
+          </div>
+          <button class="stats-refresh-btn" onclick="renderAdminStats()" title="새로고침">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+
+        <!-- 요약 카드 그리드 -->
+        <div class="admin-stats-grid" id="admin-stats-grid">
+          <!-- JS 렌더 -->
+        </div>
+
+        <!-- ─── 회원 목록 다운로드 ─── -->
+        <div class="stats-section-card">
+          <div class="stats-section-header">
+            <div class="stats-section-title">
+              <i class="fas fa-users"></i> 회원 현황
+            </div>
+            <div class="stats-section-actions">
+              <select id="stats-member-filter" class="stats-select" onchange="renderStatsMemberTable()">
+                <option value="all">전체</option>
+                <option value="approved">승인 완료</option>
+                <option value="pending">승인 대기</option>
+                <option value="rejected">거부됨</option>
+              </select>
+              <button class="stats-dl-btn" onclick="downloadMembersExcel()">
+                <i class="fas fa-file-excel"></i> 엑셀 다운로드
+              </button>
+            </div>
+          </div>
+          <div class="stats-table-wrap">
+            <table class="stats-table" id="stats-member-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>아이디</th>
+                  <th>이름</th>
+                  <th>소속부서</th>
+                  <th>업무구분</th>
+                  <th>전화번호</th>
+                  <th>차량번호</th>
+                  <th>상태</th>
+                  <th>가입일</th>
+                </tr>
+              </thead>
+              <tbody id="stats-member-tbody">
+                <tr><td colspan="9" class="stats-empty">데이터 없음</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ─── 시청 내역 다운로드 ─── -->
+        <div class="stats-section-card">
+          <div class="stats-section-header">
+            <div class="stats-section-title">
+              <i class="fas fa-play-circle"></i> 동영상 시청 내역
+            </div>
+            <div class="stats-section-actions">
+              <select id="stats-watch-filter" class="stats-select" onchange="renderStatsWatchTable()">
+                <option value="all">전체 유형</option>
+                <option value="upload">업로드</option>
+                <option value="youtube">YouTube</option>
+              </select>
+              <button class="stats-dl-btn" onclick="downloadWatchExcel()">
+                <i class="fas fa-file-excel"></i> 엑셀 다운로드
+              </button>
+            </div>
+          </div>
+          <div class="stats-table-wrap">
+            <table class="stats-table" id="stats-watch-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>아이디</th>
+                  <th>이름</th>
+                  <th>소속부서</th>
+                  <th>교육구분</th>
+                  <th>게시물 제목</th>
+                  <th>동영상명</th>
+                  <th>유형</th>
+                  <th>시청일시</th>
+                </tr>
+              </thead>
+              <tbody id="stats-watch-tbody">
+                <tr><td colspan="9" class="stats-empty">데이터 없음</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- ===================== 게시물 작성 모달 ===================== -->
+<div class="modal-overlay hidden" id="write-modal">
+  <div class="modal-box write-modal-box">
+    <div class="modal-header">
+      <h3>게시물 작성</h3>
+      <button class="modal-x-btn" onclick="closeWriteModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body-area">
+
+      <!-- 공개 범위 안내 배너 (JS에서 채움) -->
+      <div id="write-scope-banner"></div>
+
+      <div class="form-row">
+        <label>제목</label>
+        <input type="text" id="write-title" class="write-input" placeholder="제목을 입력하세요" />
+      </div>
+      <div class="form-row">
+        <label>카테고리</label>
+        <select id="write-category" class="write-input">
+          <option value="main">공지</option>
+          <option value="newcomer">신규 입사자</option>
+          <option value="appliance">가전 안전</option>
+          <option value="aircon">에어컨 안전</option>
+          <option value="warehouse">창고 안전</option>
+          <option value="regulation">안전 규정</option>
+          <option value="major-accident">중대재해알림</option>
+          <option value="violation">안전미준수사례</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>내용</label>
+        <textarea id="write-content" class="write-textarea" placeholder="내용을 입력하세요"></textarea>
+      </div>
+      <div class="form-row">
+        <label>영상 URL <span class="label-opt">(선택 · YouTube 링크)</span></label>
+        <input type="text" id="write-video" class="write-input" placeholder="https://www.youtube.com/watch?v=..." />
+      </div>
+
+      <!-- 사진 첨부 -->
+      <div class="form-row">
+        <label>
+          사진 첨부
+          <span class="label-opt">(선택 · JPG/PNG/GIF · 최대 1MB · 최대 5장)</span>
+        </label>
+        <div class="attach-drop-zone" id="img-drop-zone" onclick="document.getElementById('img-file-input').click()">
+          <i class="fas fa-image attach-drop-icon"></i>
+          <p class="attach-drop-text">클릭하거나 파일을 끌어다 놓으세요</p>
+          <p class="attach-drop-limit">JPG · PNG · GIF / 장당 최대 1MB</p>
+          <input type="file" id="img-file-input" accept="image/jpeg,image/png,image/gif" multiple hidden />
+        </div>
+        <!-- 사진 미리보기 목록 -->
+        <div class="attach-preview-list" id="img-preview-list"></div>
+      </div>
+
+      <!-- 동영상 첨부 -->
+      <div class="form-row">
+        <label>
+          동영상 첨부
+          <span class="label-opt">(선택 · MP4/MOV/AVI 등 · 최대 200MB · 최대 3개)</span>
+        </label>
+        <div class="attach-drop-zone" id="vid-drop-zone" onclick="document.getElementById('vid-file-input').click()">
+          <i class="fas fa-film attach-drop-icon"></i>
+          <p class="attach-drop-text">클릭하거나 파일을 끌어다 놓으세요</p>
+          <p class="attach-drop-limit">MP4 · MOV · AVI · MKV · WEBM / 개당 최대 200MB / 최대 3개</p>
+          <input type="file" id="vid-file-input" accept="video/*,.mp4,.mov,.avi,.wmv,.mkv,.webm,.m4v" multiple hidden />
+        </div>
+        <!-- 동영상 미리보기 목록 (JS 렌더) -->
+        <div id="vid-preview-list" class="vid-preview-list"></div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeWriteModal()">취소</button>
+      <button class="btn-save" onclick="savePost()"><i class="fas fa-save"></i> 저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 접속 팝업 모달 ===== -->
+<div class="popup-overlay hidden" id="site-popup-overlay">
+  <div class="site-popup-box" id="site-popup-box">
+    <!-- 팝업 상단 헤더 (유형 배지 + 닫기) -->
+    <div class="site-popup-header" id="site-popup-header">
+      <span class="site-popup-type-badge" id="site-popup-badge"></span>
+      <button class="site-popup-close-btn" onclick="closeSitePopup(false)" title="닫기">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- 팝업 이미지 (있을 때만) -->
+    <div class="site-popup-img-wrap hidden" id="site-popup-img-wrap">
+      <img id="site-popup-img" src="" alt="팝업 이미지" />
+    </div>
+    <!-- 팝업 제목 & 본문 -->
+    <div class="site-popup-body">
+      <h3 class="site-popup-title" id="site-popup-title"></h3>
+      <div class="site-popup-content" id="site-popup-content"></div>
+    </div>
+    <!-- 팝업 하단 -->
+    <div class="site-popup-footer" id="site-popup-footer">
+      <label class="popup-skip-label" id="popup-skip-label">
+        <input type="checkbox" id="popup-skip-today-chk" />
+        <span class="popup-skip-check-custom"></span>
+        <span>오늘 하루 안보기</span>
+      </label>
+      <button class="site-popup-confirm-btn" id="site-popup-confirm-btn" onclick="closeSitePopup(false)">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 회원 정보 수정 모달 ===== -->
+<div class="modal-overlay hidden" id="member-edit-modal">
+  <div class="modal-box member-edit-modal-box">
+    <div class="modal-header">
+      <h3><i class="fas fa-user-edit"></i> 회원 정보 수정</h3>
+      <button class="modal-x-btn" onclick="closeMemberEditModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body-area">
+
+      <!-- 아이디 (읽기 전용) -->
+      <div class="form-row">
+        <label>아이디 <span class="mem-readonly-badge">수정 불가</span></label>
+        <input type="text" id="medit-id" class="write-input mem-readonly-input" readonly />
+      </div>
+
+      <!-- 이름 / 전화번호 -->
+      <div class="medit-row">
+        <div class="form-row">
+          <label>이름 <span class="mem-req">*</span></label>
+          <input type="text" id="medit-name" class="write-input" placeholder="이름" />
+          <span class="medit-msg" id="medit-msg-name"></span>
+        </div>
+        <div class="form-row">
+          <label>전화번호 <span class="mem-req">*</span></label>
+          <input type="tel" id="medit-tel" class="write-input" placeholder="010-0000-0000" maxlength="13" />
+          <span class="medit-msg" id="medit-msg-tel"></span>
+        </div>
+      </div>
+
+      <!-- 소속 부서 / 업무구분 -->
+      <div class="medit-row">
+        <div class="form-row">
+          <label>소속 부서 <span class="mem-req">*</span></label>
+          <select id="medit-dept" class="write-input medit-select">
+            <option value="">부서를 선택하세요</option>
+            <option value="평택TC">평택TC</option>
+            <option value="인천TC">인천TC</option>
+            <option value="목포TC">목포TC</option>
+            <option value="화성TDC">화성TDC</option>
+            <option value="광주TDC">광주TDC</option>
+            <option value="HVAC">HVAC</option>
+            <option value="냉장사업부">냉장사업부</option>
+          </select>
+          <span class="medit-msg" id="medit-msg-dept"></span>
+        </div>
+        <div class="form-row">
+          <label>업무구분 <span class="mem-req">*</span></label>
+          <select id="medit-role" class="write-input medit-select">
+            <option value="">업무구분을 선택하세요</option>
+            <option value="가전(1톤,기간포함)">가전(1톤,기간포함)</option>
+            <option value="에어컨">에어컨</option>
+            <option value="가전전문기사">가전전문기사</option>
+            <option value="에어컨전문기사">에어컨전문기사</option>
+            <option value="스텝">스텝</option>
+            <option value="보관하역">보관하역</option>
+            <option value="HVAC">HVAC</option>
+            <option value="CDC운송">CDC운송</option>
+          </select>
+          <span class="medit-msg" id="medit-msg-role"></span>
+        </div>
+      </div>
+
+      <!-- 차량번호 -->
+      <div class="form-row">
+        <label>차량번호</label>
+        <input type="text" id="medit-car" class="write-input" placeholder="차량번호(선택)" />
+      </div>
+
+      <!-- 상태 -->
+      <div class="form-row">
+        <label>계정 상태 <span class="mem-req">*</span></label>
+        <select id="medit-status" class="write-input medit-select">
+          <option value="pending">승인 대기</option>
+          <option value="approved">승인 완료</option>
+          <option value="rejected">거부됨</option>
+        </select>
+      </div>
+
+      <!-- 메모 -->
+      <div class="form-row">
+        <label>관리자 메모 <span style="font-size:0.72rem;color:#94a3b8;font-weight:400">(선택)</span></label>
+        <textarea id="medit-memo" class="write-textarea" style="min-height:70px" placeholder="내부 메모 (회원에게 노출되지 않음)"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeMemberEditModal()">취소</button>
+      <button class="btn-save" onclick="saveMemberEdit()"><i class="fas fa-save"></i> 저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 시청내역 조회 모달 ===== -->
+<div class="modal-overlay hidden" id="view-history-modal">
+  <div class="modal-box vh-modal-box">
+    <!-- 모달 헤더 -->
+    <div class="vh-modal-header">
+      <div class="vh-header-left">
+        <div class="vh-user-avatar" id="vh-avatar-char">?</div>
+        <div class="vh-user-info">
+          <div class="vh-user-name" id="vh-user-name">-</div>
+          <div class="vh-user-dept" id="vh-user-dept">-</div>
+        </div>
+      </div>
+      <div class="vh-header-right">
+        <span class="vh-total-badge" id="vh-total-count">총 0건</span>
+        <button class="vh-close-btn" onclick="closeViewHistoryModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <!-- 테이블 -->
+    <div class="vh-table-wrap">
+      <table class="vh-table">
+        <thead>
+          <tr>
+            <th class="vh-th-num">#</th>
+            <th class="vh-th-tab">교육구분</th>
+            <th class="vh-th-title">게시물 제목</th>
+            <th class="vh-th-vid">동영상</th>
+            <th class="vh-th-date">시청일시</th>
+          </tr>
+        </thead>
+        <tbody id="vh-tbody">
+          <tr>
+            <td colspan="5" class="vh-empty">
+              <i class="fas fa-play-circle"></i>
+              <span>시청한 동영상이 없습니다.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 모달 푸터 -->
+    <div class="vh-modal-footer">
+      <button class="btn-cancel" onclick="closeViewHistoryModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 승인/거부 확인 모달 ===== -->
+<div class="modal-overlay hidden" id="confirm-modal">
+  <div class="modal-box confirm-modal-box">
+    <div class="confirm-modal-icon" id="confirm-icon"></div>
+    <h3 class="confirm-modal-title" id="confirm-title"></h3>
+    <p class="confirm-modal-desc" id="confirm-desc"></p>
+    <div class="confirm-modal-btns">
+      <button class="btn-cancel" onclick="closeConfirmModal()">취소</button>
+      <button class="confirm-ok-btn" id="confirm-ok-btn" onclick="execConfirm()"></button>
+    </div>
+  </div>
+</div>
+
+<!-- 알림(시청내역) 드롭다운 -->
+<div class="notif-dropdown hidden" id="notif-dropdown">
+  <div class="notif-header">
+    <span><i class="fas fa-play-circle" style="color:#3b82f6;margin-right:6px;"></i>내 시청 내역</span>
+    <button onclick="closeWatchDropdown()" style="font-size:0.75rem;color:#94a3b8;">✕ 닫기</button>
+  </div>
+  <div class="watch-hist-list" id="watch-hist-list">
+    <div class="watch-hist-loading">
+      <i class="fas fa-spinner fa-spin"></i> 불러오는 중...
+    </div>
+  </div>
+</div>
+
+<!-- 토스트 -->
+<div class="toast hidden" id="toast"></div>
+
+<!-- ===================================================================
+     마이페이지 드로어 (오른쪽 슬라이드 패널)
+=================================================================== -->
+<!-- 배경 오버레이 -->
+<div class="mypage-overlay" id="mypage-overlay" onclick="closeMyPage()"></div>
+
+<!-- 드로어 패널 -->
+<aside class="mypage-drawer" id="mypage-drawer" role="dialog" aria-label="마이페이지">
+
+  <!-- 헤더 -->
+  <div class="mypage-header">
+    <h2 class="mypage-header-title"><i class="fas fa-user-circle"></i> 마이페이지</h2>
+    <button class="mypage-close-btn" onclick="closeMyPage()" title="닫기">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- 프로필 카드 -->
+  <div class="mypage-profile-card">
+    <div class="mypage-avatar" id="mypage-avatar">?</div>
+    <div class="mypage-profile-info">
+      <p class="mypage-name" id="mypage-name">-</p>
+      <p class="mypage-role-badge-wrap">
+        <span class="mypage-role-badge" id="mypage-role-badge">직원</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- 정보 섹션 -->
+  <div class="mypage-section">
+    <p class="mypage-section-label">계정 정보</p>
+    <ul class="mypage-info-list">
+      <li class="mypage-info-item">
+        <span class="mypage-info-icon"><i class="fas fa-id-badge"></i></span>
+        <span class="mypage-info-label">아이디</span>
+        <span class="mypage-info-value" id="mypage-id">-</span>
+      </li>
+      <li class="mypage-info-item">
+        <span class="mypage-info-icon"><i class="fas fa-building"></i></span>
+        <span class="mypage-info-label">소속부서</span>
+        <span class="mypage-info-value" id="mypage-dept">-</span>
+      </li>
+      <li class="mypage-info-item">
+        <span class="mypage-info-icon"><i class="fas fa-user-tag"></i></span>
+        <span class="mypage-info-label">구분</span>
+        <span class="mypage-info-value" id="mypage-role-label">-</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 시청 기록 요약 (일반 사용자만) -->
+  <div class="mypage-section" id="mypage-watch-section">
+    <p class="mypage-section-label">나의 시청 현황</p>
+    <div class="mypage-watch-stat">
+      <div class="mypage-watch-stat-icon"><i class="fas fa-play-circle"></i></div>
+      <div>
+        <p class="mypage-watch-count" id="mypage-watch-count">0</p>
+        <p class="mypage-watch-desc">총 시청 동영상</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 로그아웃 버튼 -->
+  <div class="mypage-footer">
+    <button class="mypage-logout-btn" onclick="confirmLogout()">
+      <i class="fas fa-sign-out-alt"></i>
+      로그아웃
+    </button>
+  </div>
+
+</aside>
+
+<!-- 로그아웃 확인 모달 -->
+<div class="modal-overlay hidden" id="logout-confirm-modal">
+  <div class="modal-box confirm-modal-box">
+    <div class="confirm-modal-icon">🚪</div>
+    <h3 class="confirm-modal-title">로그아웃 하시겠습니까?</h3>
+    <p class="confirm-modal-desc">로그아웃 후 로그인 화면으로 이동합니다.</p>
+    <div class="confirm-modal-btns">
+      <button class="btn-cancel" onclick="closeLogoutConfirm()">취소</button>
+      <button class="confirm-ok-btn logout" onclick="handleLogout()">로그아웃</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/data.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

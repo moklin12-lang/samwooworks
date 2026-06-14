@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240">
+  <defs>
+    <radialGradient id="lMedalRim" cx="45%" cy="35%" r="65%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="35%"  stop-color="#F0F2F4"/>
+      <stop offset="70%"  stop-color="#D8DCE2"/>
+      <stop offset="100%" stop-color="#B8BEC8"/>
+    </radialGradient>
+    <radialGradient id="lMedalFace" cx="42%" cy="38%" r="62%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="40%"  stop-color="#F4F6F8"/>
+      <stop offset="75%"  stop-color="#E2E6EA"/>
+      <stop offset="100%" stop-color="#CDD3DA"/>
+    </radialGradient>
+    <linearGradient id="lShieldGrad" x1="15%" y1="5%" x2="85%" y2="95%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="25%"  stop-color="#F0F2F5"/>
+      <stop offset="55%"  stop-color="#DDE1E8"/>
+      <stop offset="85%"  stop-color="#C4CAD4"/>
+      <stop offset="100%" stop-color="#B0B8C4"/>
+    </linearGradient>
+    <linearGradient id="lShieldBezel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#E8ECF0"/>
+      <stop offset="50%"  stop-color="#C8CED8"/>
+      <stop offset="100%" stop-color="#A0A8B4"/>
+    </linearGradient>
+    <radialGradient id="lSirenDome" cx="35%" cy="28%" r="65%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="35%"  stop-color="#F0F2F5"/>
+      <stop offset="70%"  stop-color="#D8DCE4"/>
+      <stop offset="100%" stop-color="#B8C0CC"/>
+    </radialGradient>
+    <linearGradient id="lSirenBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#ECEEF2"/>
+      <stop offset="100%" stop-color="#C0C6D0"/>
+    </linearGradient>
+    <filter id="lMedalShadow" x="-12%" y="-8%" width="124%" height="124%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#A0A8B8" flood-opacity="0.22"/>
+    </filter>
+    <filter id="lRayGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- 메달 외곽 -->
+  <circle cx="100" cy="135" r="88" fill="url(#lMedalRim)" filter="url(#lMedalShadow)"/>
+  <circle cx="100" cy="135" r="88" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.9"/>
+  <circle cx="100" cy="135" r="87" fill="none" stroke="#A8B0BC" stroke-width="1" stroke-opacity="0.6"/>
+  <circle cx="100" cy="135" r="82" fill="url(#lMedalFace)"/>
+  <circle cx="100" cy="135" r="82" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.8"/>
+  <circle cx="100" cy="135" r="80" fill="none" stroke="#B8C0CC" stroke-width="1.5" stroke-opacity="0.7"/>
+
+  <!-- 방패 베젤 -->
+  <path d="M100,188 L62,171 L60,117 Q60,103 69,96 L100,83 L131,96 Q140,103 140,117 L138,171 Z"
+        fill="url(#lShieldBezel)"/>
+  <path d="M86,83 Q93,76 100,72 Q107,76 114,83"
+        fill="none" stroke="url(#lShieldBezel)" stroke-width="6" stroke-linecap="round"/>
+  <!-- 방패 내부 -->
+  <path d="M100,184 L65,168 L63,116 Q63,104 71,98 L100,86 L129,98 Q137,104 137,116 L135,168 Z"
+        fill="url(#lShieldGrad)"/>
+  <path d="M87,86 Q93,79 100,75 Q107,79 113,86"
+        fill="none" stroke="url(#lShieldGrad)" stroke-width="4" stroke-linecap="round"/>
+  <!-- 방패 하이라이트 -->
+  <path d="M100,86 L71,98 Q63,104 63,116 L65,168 L100,184"
+        fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.7"/>
+  <line x1="100" y1="83" x2="100" y2="188"
+        stroke="#C8CED8" stroke-width="1" stroke-opacity="0.8"/>
+  <path d="M100,86 L71,98 Q63,104 63,116 L65,168 L100,184 L100,86"
+        fill="#FFFFFF" fill-opacity="0.12"/>
+
+  <!-- ===== SW 텍스트 — 완전 단색 노란색 ===== -->
+  <!-- 그림자 -->
+  <text x="102" y="155"
+    font-family="'Arial Black', 'Impact', 'Helvetica Neue', sans-serif"
+    font-size="58" font-weight="900" font-style="italic"
+    text-anchor="middle"
+    fill="#7A4000"
+    fill-opacity="0.5"
+    letter-spacing="-3">SW</text>
+  <!-- 외곽선 -->
+  <text x="100" y="153"
+    font-family="'Arial Black', 'Impact', 'Helvetica Neue', sans-serif"
+    font-size="58" font-weight="900" font-style="italic"
+    text-anchor="middle"
+    fill="none"
+    stroke="#7A4800"
+    stroke-width="6"
+    stroke-linejoin="round"
+    letter-spacing="-3">SW</text>
+  <!-- 본체 — 완전 단색 노란색 -->
+  <text x="100" y="153"
+    font-family="'Arial Black', 'Impact', 'Helvetica Neue', sans-serif"
+    font-size="58" font-weight="900" font-style="italic"
+    text-anchor="middle"
+    fill="#FFB800"
+    letter-spacing="-3">SW</text>
+  <!-- 하이라이트 -->
+  <text x="100" y="151"
+    font-family="'Arial Black', 'Impact', 'Helvetica Neue', sans-serif"
+    font-size="58" font-weight="900" font-style="italic"
+    text-anchor="middle"
+    fill="none"
+    stroke="#FFE566"
+    stroke-width="1.5"
+    stroke-opacity="0.8"
+    letter-spacing="-3">SW</text>
+
+  <!-- 경광등 광선 -->
+  <g filter="url(#lRayGlow)" opacity="0.65">
+    <line x1="100" y1="16" x2="100" y2="8"  stroke="#D0D4DC" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="112" y1="19" x2="117" y2="13" stroke="#D0D4DC" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="118" y1="26" x2="124" y2="22" stroke="#D0D4DC" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="119" y1="34" x2="126" y2="34" stroke="#D0D4DC" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="114" y1="42" x2="120" y2="47" stroke="#D0D4DC" stroke-width="1.0" stroke-linecap="round"/>
+    <line x1="88"  y1="19" x2="83"  y2="13" stroke="#D0D4DC" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="82"  y1="26" x2="76"  y2="22" stroke="#D0D4DC" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="81"  y1="34" x2="74"  y2="34" stroke="#D0D4DC" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="86"  y1="42" x2="80"  y2="47" stroke="#D0D4DC" stroke-width="1.0" stroke-linecap="round"/>
+  </g>
+
+  <!-- 받침대 -->
+  <path d="M88,56 L112,56 L109,50 L91,50 Z" fill="url(#lSirenBase)" stroke="#C0C6D0" stroke-width="1"/>
+  <rect x="93" y="40" width="14" height="12" rx="2"
+        fill="url(#lSirenBase)" stroke="#C0C6D0" stroke-width="1"/>
+  <rect x="89" y="36" width="22" height="6" rx="3"
+        fill="url(#lSirenBase)" stroke="#C8CED6" stroke-width="1"/>
+  <line x1="94" y1="37" x2="94" y2="51" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.7"/>
+
+  <!-- 돔 -->
+  <ellipse cx="100" cy="30" rx="16" ry="11"
+           fill="url(#lSirenDome)" stroke="#C4CAD4" stroke-width="1.5"/>
+  <ellipse cx="100" cy="30" rx="9" ry="6.5" fill="#FFFFFF" fill-opacity="0.6"/>
+  <ellipse cx="95" cy="26" rx="4.5" ry="3" fill="#FFFFFF" opacity="0.85"/>
+  <path d="M86,26 Q93,19 100,19 Q107,19 114,26"
+        fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.7" stroke-linecap="round"/>
+</svg>

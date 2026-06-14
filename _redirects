@@ -1,0 +1,3 @@
+# HTTP → HTTPS 강제 리다이렉트 (Netlify가 자동 처리하지만 명시적으로 추가)
+http://samwoosafety.co.kr/*     https://samwoosafety.co.kr/:splat  301!
+http://www.samwoosafety.co.kr/* https://samwoosafety.co.kr/:splat  301!

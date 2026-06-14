@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>아이콘 생성</title>
+<style>
+  body { font-family: sans-serif; padding: 40px; background: #1e3a8a; color: #fff; text-align: center; }
+  h2 { margin-bottom: 30px; }
+  .wrap { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin: 30px 0; }
+  .card { background: rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; }
+  canvas { border-radius: 20px; display: block; margin: 0 auto 16px; }
+  .btn {
+    display: inline-block; padding: 12px 28px; background: #FFB800; color: #1a1a1a;
+    border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 1rem;
+    cursor: pointer; border: none;
+  }
+  .status { margin-top: 20px; font-size: 0.9rem; color: #a5f3fc; }
+</style>
+</head>
+<body>
+<h2>🛡️ SW 아이콘 생성기</h2>
+<p>아래 버튼을 눌러 PNG 파일을 다운로드하세요</p>
+
+<div class="wrap">
+  <div class="card">
+    <div style="margin-bottom:8px;font-size:0.85rem;opacity:0.7">192 × 192</div>
+    <canvas id="c192" width="192" height="192"></canvas>
+    <a id="dl192" class="btn">⬇ icon-192.png 다운로드</a>
+  </div>
+  <div class="card">
+    <div style="margin-bottom:8px;font-size:0.85rem;opacity:0.7">512 × 512</div>
+    <canvas id="c512" width="512" height="512"></canvas>
+    <a id="dl512" class="btn">⬇ icon-512.png 다운로드</a>
+  </div>
+</div>
+<div class="status" id="status">⏳ 생성 중...</div>
+
+<script>
+function drawSWIcon(canvas) {
+  const s = canvas.width;
+  const ctx = canvas.getContext('2d');
+  const r = s / 200; // ratio
+
+  ctx.clearRect(0, 0, s, s);
+
+  // ── 배경 (네이비 둥근 사각형) ──
+  const radius = s * 0.18;
+  ctx.beginPath();
+  ctx.moveTo(radius, 0);
+  ctx.lineTo(s - radius, 0);
+  ctx.quadraticCurveTo(s, 0, s, radius);
+  ctx.lineTo(s, s - radius);
+  ctx.quadraticCurveTo(s, s, s - radius, s);
+  ctx.lineTo(radius, s);
+  ctx.quadraticCurveTo(0, s, 0, s - radius);
+  ctx.lineTo(0, radius);
+  ctx.quadraticCurveTo(0, 0, radius, 0);
+  ctx.closePath();
+  ctx.fillStyle = '#1e3a8a';
+  ctx.fill();
+
+  // ── 메달 외곽 링 ──
+  const cx = s * 0.5, cy = s * 0.54;
+  const outerR = s * 0.36;
+
+  // 외곽 그림자
+  ctx.shadowColor = 'rgba(0,0,0,0.4)';
+  ctx.shadowBlur = s * 0.05;
+  ctx.shadowOffsetY = s * 0.015;
+
+  // 외곽 링
+  ctx.beginPath(); ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+  ctx.fillStyle = '#C8CDD8'; ctx.fill();
+
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+
+  // 흰 테두리
+  ctx.beginPath(); ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = r * 2.5; ctx.stroke();
+
+  // 안쪽 링
+  ctx.beginPath(); ctx.arc(cx, cy, outerR * 0.93, 0, Math.PI * 2);
+  ctx.fillStyle = '#F0F2F6'; ctx.fill();
+
+  ctx.beginPath(); ctx.arc(cx, cy, outerR * 0.88, 0, Math.PI * 2);
+  ctx.fillStyle = '#ECEEF4'; ctx.fill();
+
+  // ── 방패 ──
+  const shX = cx, shTopY = cy - outerR * 0.72;
+  const shBotY = cy + outerR * 0.60;
+  const shW = outerR * 0.77;
+
+  function shieldPath() {
+    ctx.beginPath();
+    ctx.moveTo(shX, shTopY);
+    ctx.lineTo(shX - shW, shTopY + outerR * 0.18);
+    ctx.quadraticCurveTo(shX - shW - outerR * 0.09, shTopY + outerR * 0.38, shX - shW - outerR * 0.06, shTopY + outerR * 0.78);
+    ctx.lineTo(shX, shBotY);
+    ctx.lineTo(shX + shW + outerR * 0.06, shTopY + outerR * 0.78);
+    ctx.quadraticCurveTo(shX + shW + outerR * 0.09, shTopY + outerR * 0.38, shX + shW, shTopY + outerR * 0.18);
+    ctx.closePath();
+  }
+
+  // 방패 그림자
+  ctx.save();
+  ctx.translate(r * 2, r * 2);
+  shieldPath();
+  ctx.fillStyle = '#C0C8D4'; ctx.fill();
+  ctx.restore();
+
+  // 방패 본체
+  shieldPath();
+  const grad = ctx.createLinearGradient(shX - shW, shTopY, shX + shW, shBotY);
+  grad.addColorStop(0,   '#F0F4F8');
+  grad.addColorStop(0.4, '#D8E0EA');
+  grad.addColorStop(1,   '#B0C0D0');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // 방패 테두리
+  shieldPath();
+  ctx.strokeStyle = '#8090A8'; ctx.lineWidth = r * 2; ctx.stroke();
+
+  // 방패 왼쪽 하이라이트
+  ctx.beginPath();
+  ctx.moveTo(shX, shTopY);
+  ctx.lineTo(shX - shW, shTopY + outerR * 0.18);
+  ctx.quadraticCurveTo(shX - shW - outerR * 0.09, shTopY + outerR * 0.38, shX - shW - outerR * 0.06, shTopY + outerR * 0.78);
+  ctx.lineTo(shX, shBotY);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.fill();
+
+  // 방패 중앙선
+  ctx.beginPath();
+  ctx.moveTo(shX, shTopY); ctx.lineTo(shX, shBotY);
+  ctx.strokeStyle = 'rgba(160,176,192,0.6)'; ctx.lineWidth = r * 1.2; ctx.stroke();
+
+  // ── SW 텍스트 ──
+  const fontSize = outerR * 1.08;
+  const textY = cy + outerR * 0.28;
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+
+  // 그림자
+  ctx.font = `900 italic ${fontSize}px "Arial Black", Impact, sans-serif`;
+  ctx.fillStyle = 'rgba(122,64,0,0.45)';
+  ctx.letterSpacing = '-2px';
+  ctx.fillText('SW', cx + r * 2, textY + r * 2);
+
+  // 외곽선
+  ctx.strokeStyle = '#7A4800'; ctx.lineWidth = r * 5;
+  ctx.lineJoin = 'round';
+  ctx.strokeText('SW', cx, textY);
+
+  // 본체 골드
+  ctx.fillStyle = '#FFB800';
+  ctx.fillText('SW', cx, textY);
+
+  // 하이라이트
+  ctx.strokeStyle = 'rgba(255,229,102,0.7)'; ctx.lineWidth = r * 1.5;
+  ctx.strokeText('SW', cx, textY - r * 2);
+
+  // ── 경광등 ──
+  const ltX = cx, ltY = cy - outerR - r * 2;
+
+  // 받침대 사다리꼴
+  ctx.beginPath();
+  ctx.moveTo(ltX - r * 10, ltY);
+  ctx.lineTo(ltX + r * 10, ltY);
+  ctx.lineTo(ltX + r * 8, ltY - r * 5);
+  ctx.lineTo(ltX - r * 8, ltY - r * 5);
+  ctx.closePath();
+  ctx.fillStyle = '#D0D4DE'; ctx.fill();
+  ctx.strokeStyle = '#B0B8C8'; ctx.lineWidth = r; ctx.stroke();
+
+  // 받침대 박스
+  ctx.beginPath();
+  ctx.roundRect(ltX - r * 6, ltY - r * 14, r * 12, r * 10, r * 2);
+  ctx.fillStyle = '#D0D4DE'; ctx.fill();
+  ctx.strokeStyle = '#B0B8C8'; ctx.lineWidth = r; ctx.stroke();
+
+  // 넥
+  ctx.beginPath();
+  ctx.roundRect(ltX - r * 9, ltY - r * 19, r * 18, r * 5, r * 3);
+  ctx.fillStyle = '#D8DCE6'; ctx.fill();
+  ctx.strokeStyle = '#C0C6D2'; ctx.lineWidth = r; ctx.stroke();
+
+  // 돔
+  ctx.beginPath();
+  ctx.ellipse(ltX, ltY - r * 24, r * 13, r * 9, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#D0D4DE'; ctx.fill();
+  ctx.strokeStyle = '#B8C0CC'; ctx.lineWidth = r * 1.5; ctx.stroke();
+
+  // 돔 안쪽
+  ctx.beginPath();
+  ctx.ellipse(ltX, ltY - r * 24, r * 7, r * 5, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(236,238,244,0.8)'; ctx.fill();
+
+  // 돔 하이라이트
+  ctx.beginPath();
+  ctx.ellipse(ltX - r * 4, ltY - r * 27, r * 4, r * 3, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.fill();
+}
+
+function initIcon(canvasId, dlId, size) {
+  const canvas = document.getElementById(canvasId);
+  canvas.width = size; canvas.height = size;
+
+  try {
+    drawSWIcon(canvas);
+    const png = canvas.toDataURL('image/png');
+    const a = document.getElementById(dlId);
+    a.href = png;
+    a.download = dlId === 'dl192' ? 'icon-192.png' : 'icon-512.png';
+    return true;
+  } catch(e) {
+    console.error(e);
+    return false;
+  }
+}
+
+window.addEventListener('load', () => {
+  const ok192 = initIcon('c192', 'dl192', 192);
+  const ok512 = initIcon('c512', 'dl512', 512);
+  const status = document.getElementById('status');
+  if (ok192 && ok512) {
+    status.textContent = '✅ 생성 완료! 위 버튼을 클릭해서 다운로드하세요.';
+    status.style.color = '#86efac';
+  } else {
+    status.textContent = '❌ 생성 실패. 콘솔을 확인해주세요.';
+    status.style.color = '#fca5a5';
+  }
+});
+</script>
+</body>
+</html>

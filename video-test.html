@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>동영상 재생 진단</title>
+<style>
+  body { font-family: sans-serif; padding: 30px; background: #0f172a; color: #e2e8f0; }
+  h2 { color: #60a5fa; }
+  .card { background: #1e293b; border-radius: 12px; padding: 20px; margin: 16px 0; }
+  .ok   { color: #4ade80; font-weight: 700; }
+  .err  { color: #f87171; font-weight: 700; }
+  .warn { color: #facc15; font-weight: 700; }
+  .info { color: #94a3b8; font-size: 0.85rem; }
+  pre   { background: #0f172a; padding: 12px; border-radius: 8px; font-size: 0.8rem;
+          overflow-x: auto; color: #7dd3fc; white-space: pre-wrap; }
+  input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155;
+          background: #0f172a; color: #e2e8f0; font-size: 0.9rem; box-sizing: border-box; }
+  button { padding: 10px 24px; background: #3b82f6; color: #fff; border: none;
+           border-radius: 8px; font-size: 0.95rem; cursor: pointer; margin-top: 10px; }
+  button:hover { background: #2563eb; }
+  video { width: 100%; max-width: 480px; border-radius: 8px; background: #000; }
+  .log-line { padding: 4px 0; border-bottom: 1px solid #1e293b; font-size: 0.82rem; }
+</style>
+</head>
+<body>
+<h2>🔍 동영상 재생 진단 도구</h2>
+<p class="info">PC에서 동영상이 재생되지 않는 원인을 자동으로 찾아드립니다.</p>
+
+<!-- STEP 1: 브라우저 코덱 지원 -->
+<div class="card">
+  <h3>① 브라우저 코덱 지원 현황</h3>
+  <div id="codec-result"></div>
+</div>
+
+<!-- STEP 2: URL 입력 -->
+<div class="card">
+  <h3>② Supabase 동영상 URL 진단</h3>
+  <p class="info">재생 안 되는 게시물의 동영상 URL을 붙여넣으세요.<br>
+  (게시물 열기 → F12 콘솔에서 <code>[video] 해상도:</code> 로그 옆 URL 확인, 또는 영상 우클릭 → "동영상 URL 복사")</p>
+  <input type="text" id="url-input" placeholder="https://omuchkxgzjtyhzadjozp.supabase.co/storage/v1/object/public/video/..." />
+  <button onclick="runDiag()">🔎 진단 시작</button>
+</div>
+
+<!-- STEP 3: 진단 결과 -->
+<div class="card" id="result-card" style="display:none">
+  <h3>③ 진단 결과</h3>
+  <div id="diag-log"></div>
+  <div id="video-preview" style="margin-top:16px;"></div>
+</div>
+
+<script>
+// ── ① 코덱 지원 체크 ──────────────────────────────────────
+const codecTests = [
+  { label: 'H.264 (AVC) MP4',    type: 'video/mp4; codecs="avc1.42E01E"' },
+  { label: 'H.265 (HEVC) MP4',   type: 'video/mp4; codecs="hvc1"' },
+  { label: 'H.265 (HEVC) MP4 2', type: 'video/mp4; codecs="hev1"' },
+  { label: 'WebM VP8',           type: 'video/webm; codecs="vp8"' },
+  { label: 'WebM VP9',           type: 'video/webm; codecs="vp9"' },
+  { label: 'WebM AV1',           type: 'video/webm; codecs="av01.0.00M.08"' },
+  { label: 'MP4 (기본)',          type: 'video/mp4' },
+  { label: 'MOV (QuickTime)',    type: 'video/quicktime' },
+];
+
+const tv = document.createElement('video');
+const codecDiv = document.getElementById('codec-result');
+let hevcSupported = false;
+
+codecTests.forEach(t => {
+  const r = tv.canPlayType(t.type);
+  const cls = r === 'probably' ? 'ok' : r === 'maybe' ? 'warn' : 'err';
+  const icon = r === 'probably' ? '✅' : r === 'maybe' ? '⚠️' : '❌';
+  if (t.label.includes('HEVC') && r !== '') hevcSupported = true;
+  codecDiv.innerHTML += `<div class="log-line"><span class="${cls}">${icon} ${r || 'no'}</span> &nbsp; ${t.label} <span class="info">(${t.type})</span></div>`;
+});
+
+if (!hevcSupported) {
+  codecDiv.innerHTML += `<div style="margin-top:12px;padding:10px;background:#7f1d1d;border-radius:8px;">
+    ⚠️ <strong>이 브라우저는 HEVC(H.265)를 지원하지 않습니다.</strong><br>
+    <span class="info">카카오톡/아이폰 촬영 영상이 HEVC라면 이 PC에서 재생 불가 → H.264로 변환 필요</span>
+  </div>`;
+}
+
+// ── ② URL 진단 ──────────────────────────────────────────────
+function log(msg, type='info') {
+  const d = document.getElementById('diag-log');
+  const cls = type === 'ok' ? 'ok' : type === 'err' ? 'err' : type === 'warn' ? 'warn' : 'info';
+  d.innerHTML += `<div class="log-line"><span class="${cls}">${msg}</span></div>`;
+}
+
+async function runDiag() {
+  const url = document.getElementById('url-input').value.trim();
+  if (!url) { alert('URL을 입력해주세요.'); return; }
+
+  const card = document.getElementById('result-card');
+  const logDiv = document.getElementById('diag-log');
+  const preview = document.getElementById('video-preview');
+  card.style.display = 'block';
+  logDiv.innerHTML = '';
+  preview.innerHTML = '';
+
+  log('📋 URL: ' + url);
+  log('');
+
+  // 1) HEAD 요청으로 서버 응답 확인
+  log('🔄 [1] 서버 응답 확인 중 (HEAD 요청)...');
+  try {
+    const res = await fetch(url, { method: 'HEAD' });
+    log(`✅ HTTP 상태: ${res.status} ${res.statusText}`, res.ok ? 'ok' : 'err');
+    log(`   Content-Type: ${res.headers.get('content-type') || '없음'}`, 'info');
+    log(`   Content-Length: ${res.headers.get('content-length') || '없음'}`, 'info');
+    log(`   Accept-Ranges: ${res.headers.get('accept-ranges') || '없음 ← ⚠️ Range 미지원'}`,
+        res.headers.get('accept-ranges') ? 'ok' : 'warn');
+    log(`   Access-Control-Allow-Origin: ${res.headers.get('access-control-allow-origin') || '없음 ← ⚠️ CORS 미설정'}`,
+        res.headers.get('access-control-allow-origin') ? 'ok' : 'warn');
+  } catch(e) {
+    log(`❌ 서버 요청 실패: ${e.message}`, 'err');
+    log('   → CORS 차단 또는 URL 오류일 가능성이 높습니다.', 'warn');
+  }
+
+  // 2) Range Request 테스트
+  log('');
+  log('🔄 [2] Range Request 테스트 (영상 스트리밍 핵심)...');
+  try {
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: { 'Range': 'bytes=0-1023' }
+    });
+    if (res.status === 206) {
+      log('✅ Range Request 정상 지원 (206 Partial Content)', 'ok');
+      log(`   Content-Range: ${res.headers.get('content-range') || '없음'}`, 'info');
+    } else if (res.status === 200) {
+      log('⚠️ Range 요청에 200 응답 → 서버가 Range를 무시하고 전체 파일 전송', 'warn');
+      log('   → PC Chrome은 이 경우 재생 실패할 수 있음', 'warn');
+    } else {
+      log(`❌ Range 요청 실패: HTTP ${res.status}`, 'err');
+    }
+  } catch(e) {
+    log(`❌ Range 요청 실패: ${e.message}`, 'err');
+  }
+
+  // 3) 실제 video 태그로 재생 테스트
+  log('');
+  log('🔄 [3] video 태그 직접 재생 테스트...');
+  const vid = document.createElement('video');
+  vid.controls = true;
+  vid.playsInline = true;
+  vid.style.width = '100%';
+  vid.style.maxWidth = '480px';
+  vid.style.borderRadius = '8px';
+  vid.style.background = '#000';
+
+  vid.addEventListener('loadedmetadata', () => {
+    log(`✅ loadedmetadata 성공! 해상도: ${vid.videoWidth}×${vid.videoHeight}`, 'ok');
+    if (vid.videoHeight > vid.videoWidth) {
+      log('📱 세로 영상 감지 (핸드폰 세로 촬영)', 'warn');
+    }
+    log(`   재생시간: ${vid.duration.toFixed(1)}초`, 'info');
+  });
+
+  vid.addEventListener('canplay', () => {
+    log('✅ canplay → 재생 가능 상태', 'ok');
+  });
+
+  vid.addEventListener('error', () => {
+    const ec = vid.error;
+    const codes = {
+      1: 'MEDIA_ERR_ABORTED — 재생 중단됨',
+      2: 'MEDIA_ERR_NETWORK — 네트워크 오류',
+      3: 'MEDIA_ERR_DECODE — 디코딩 실패 (코덱 문제 가능성 높음)',
+      4: 'MEDIA_ERR_SRC_NOT_SUPPORTED — 형식/코덱 미지원 ← HEVC일 가능성!'
+    };
+    log(`❌ video 에러 코드 ${ec?.code}: ${codes[ec?.code] || '알 수 없음'}`, 'err');
+    if (ec?.code === 4) {
+      log('   → 이 영상은 HEVC(H.265) 코덱이거나 MOV 포맷일 가능성이 높습니다.', 'err');
+      log('   → 해결: 갤러리 앱에서 다시 저장 후 업로드, 또는 HandBrake로 H.264 변환', 'warn');
+    }
+    if (ec?.code === 3) {
+      log('   → 영상 파일이 손상됐거나 컨테이너-코덱 불일치 문제입니다.', 'err');
+    }
+  });
+
+  vid.src = url;
+  vid.load();
+  preview.appendChild(vid);
+
+  log('   ↓ 아래 영상 플레이어에서 직접 재생해보세요', 'info');
+}
+</script>
+</body>
+</html>

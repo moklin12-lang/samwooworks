@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>삼우에프앤지 안전 교육장</title>
+  <meta name="description" content="삼우에프앤지 안전 교육장 - Samwoo Safety Education Center" />
+  <meta name="theme-color" content="#1e3a8a" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body class="login-page">
+
+  <!-- 배경 오버레이 -->
+  <div class="bg-overlay"></div>
+
+  <!-- 배경 이미지 (항공사진) -->
+  <div class="bg-image"></div>
+
+  <!-- 상단 헤더 -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-logo">
+        <div class="logo-emblem">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="54" height="65" style="display:block;">
+            <!-- 메달 외곽 링 -->
+            <circle cx="100" cy="135" r="90" fill="#D8DCE4"/>
+            <circle cx="100" cy="135" r="90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-opacity="0.9"/>
+            <circle cx="100" cy="135" r="84" fill="#F0F2F6"/>
+            <circle cx="100" cy="135" r="84" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.8"/>
+            <circle cx="100" cy="135" r="82" fill="none" stroke="#B8C0CC" stroke-width="1.5"/>
+            <!-- 메달 내부 면 -->
+            <circle cx="100" cy="135" r="80" fill="#ECEEF4"/>
+            <!-- 방패 외곽(베젤) -->
+            <path d="M100,190 L61,172 L59,116 Q59,102 68,95 L100,82 L132,95 Q141,102 141,116 L139,172 Z" fill="#D0D4DE"/>
+            <path d="M85,82 Q92,75 100,71 Q108,75 115,82" fill="none" stroke="#D0D4DE" stroke-width="7" stroke-linecap="round"/>
+            <!-- 방패 내부 -->
+            <path d="M100,185 L64,168 L62,115 Q62,103 70,97 L100,85 L130,97 Q138,103 138,115 L136,168 Z" fill="#E8ECF2"/>
+            <path d="M86,85 Q93,78 100,74 Q107,78 114,85" fill="none" stroke="#E8ECF2" stroke-width="5" stroke-linecap="round"/>
+            <!-- 방패 테두리 하이라이트 -->
+            <path d="M100,85 L70,97 Q62,103 62,115 L64,168 L100,185" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.8"/>
+            <path d="M100,85 L130,97 Q138,103 138,115 L136,168 L100,185" fill="none" stroke="#B8C0CC" stroke-width="1" stroke-opacity="0.7"/>
+            <!-- 방패 중앙 세로선 -->
+            <line x1="100" y1="82" x2="100" y2="190" stroke="#C8D0DC" stroke-width="1.2"/>
+            <!-- 방패 왼쪽 밝은 면 -->
+            <path d="M100,85 L70,97 Q62,103 62,115 L64,168 L100,185 Z" fill="#FFFFFF" fill-opacity="0.15"/>
+            <!-- SW 그림자 -->
+            <text x="102" y="157" font-family="Arial Black,Impact,sans-serif" font-size="60" font-weight="900" font-style="italic" text-anchor="middle" fill="#7A4000" fill-opacity="0.45" letter-spacing="-3">SW</text>
+            <!-- SW 외곽선 -->
+            <text x="100" y="155" font-family="Arial Black,Impact,sans-serif" font-size="60" font-weight="900" font-style="italic" text-anchor="middle" fill="none" stroke="#7A4800" stroke-width="6" stroke-linejoin="round" letter-spacing="-3">SW</text>
+            <!-- SW 본체 노란색 -->
+            <text x="100" y="155" font-family="Arial Black,Impact,sans-serif" font-size="60" font-weight="900" font-style="italic" text-anchor="middle" fill="#FFB800" letter-spacing="-3">SW</text>
+            <!-- SW 상단 하이라이트 -->
+            <text x="100" y="153" font-family="Arial Black,Impact,sans-serif" font-size="60" font-weight="900" font-style="italic" text-anchor="middle" fill="none" stroke="#FFE566" stroke-width="1.5" stroke-opacity="0.7" letter-spacing="-3">SW</text>
+            <!-- 받침대 -->
+            <path d="M88,57 L112,57 L109,51 L91,51 Z" fill="#D8DCE6" stroke="#C0C6D2" stroke-width="1"/>
+            <rect x="93" y="41" width="14" height="12" rx="2" fill="#D8DCE6" stroke="#C0C6D2" stroke-width="1"/>
+            <rect x="89" y="37" width="22" height="6" rx="3" fill="#DCE0EA" stroke="#C4CAD6" stroke-width="1"/>
+            <line x1="94" y1="38" x2="94" y2="52" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.7"/>
+            <!-- 경광등 돔 -->
+            <ellipse cx="100" cy="31" rx="16" ry="11" fill="#D8DCE6" stroke="#C4CAD6" stroke-width="1.5"/>
+            <ellipse cx="100" cy="31" rx="9" ry="6.5" fill="#ECEEF4" fill-opacity="0.8"/>
+            <ellipse cx="95" cy="27" rx="5" ry="3.5" fill="#FFFFFF" opacity="0.85"/>
+            <path d="M86,27 Q93,20 100,20 Q107,20 114,27" fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.7" stroke-linecap="round"/>
+            <!-- 광선 -->
+            <g stroke="#C8CCD6" stroke-linecap="round" opacity="0.7">
+              <line x1="100" y1="17" x2="100" y2="10" stroke-width="1.5"/>
+              <line x1="112" y1="20" x2="117" y2="14" stroke-width="1.5"/>
+              <line x1="119" y1="27" x2="125" y2="23" stroke-width="1.2"/>
+              <line x1="120" y1="35" x2="127" y2="35" stroke-width="1.2"/>
+              <line x1="115" y1="43" x2="121" y2="48" stroke-width="1.0"/>
+              <line x1="88"  y1="20" x2="83"  y2="14" stroke-width="1.5"/>
+              <line x1="81"  y1="27" x2="75"  y2="23" stroke-width="1.2"/>
+              <line x1="80"  y1="35" x2="73"  y2="35" stroke-width="1.2"/>
+              <line x1="85"  y1="43" x2="79"  y2="48" stroke-width="1.0"/>
+            </g>
+          </svg>
+        </div>
+        <div class="logo-text-wrap">
+          <span class="logo-main-text">삼우에프앤지 안전 교육장</span>
+          <span class="logo-sub-text">Samwoo Safety Education Center</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="login-main">
+    <div class="login-card">
+
+      <h1 class="login-title">로그인</h1>
+
+      <form id="login-form" class="login-form" onsubmit="handleLogin(event)">
+
+        <!-- 아이디 -->
+        <div class="form-group">
+          <label class="form-label" for="user-id">아이디</label>
+          <input
+            type="text"
+            id="user-id"
+            class="form-input"
+            placeholder="아이디를 입력하세요"
+            autocomplete="username"
+          />
+        </div>
+
+        <!-- 비밀번호 -->
+        <div class="form-group">
+          <div class="label-row">
+            <label class="form-label" for="user-pw">비밀번호</label>
+            <a href="#" class="pw-reset-link" onclick="showMsg('비밀번호 재설정 페이지로 이동합니다.')">비밀번호 재설정</a>
+          </div>
+          <div class="pw-input-wrap">
+            <input
+              type="password"
+              id="user-pw"
+              class="form-input"
+              placeholder="비밀번호를 입력하세요"
+              autocomplete="current-password"
+            />
+            <button type="button" class="pw-toggle-btn" onclick="togglePw()" title="비밀번호 보기">
+              <i class="fas fa-eye" id="pw-eye-icon"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 로그인 상태 유지 -->
+        <div class="remember-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="remember-me" class="checkbox-input" />
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">로그인 상태 유지</span>
+          </label>
+        </div>
+
+        <!-- 오류 메시지 -->
+        <div id="login-error" class="login-error hidden">
+          <i class="fas fa-exclamation-circle"></i>
+          <span id="error-text">아이디 또는 비밀번호를 확인해주세요.</span>
+        </div>
+
+        <!-- 로그인 버튼 -->
+        <button type="submit" class="login-btn" id="login-btn">
+          <span id="btn-text">로그인</span>
+          <span id="btn-spinner" class="btn-spinner hidden">
+            <i class="fas fa-spinner fa-spin"></i>
+          </span>
+        </button>
+
+      </form>
+
+      <!-- 하단 링크 -->
+      <div class="login-links">
+        <a href="register.html">회원가입</a>
+        <span class="divider">|</span>
+        <a href="find-id.html">아이디 찾기</a>
+        <span class="divider">|</span>
+        <a href="find-pw.html">비밀번호 찾기</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 하단 푸터 -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <span>㈜삼우에프엔지</span>
+        <span class="f-div">|</span>
+        <span>센터장: 박기웅</span>
+        <span class="f-div">|</span>
+        <span>사업자등록번호: 124-81-31846</span>
+        <span class="f-div">|</span>
+        <span>주소: 인천광역시 중구 항동7가 56</span>
+        <span class="f-div">|</span>
+        <span>Tel: 1577-3921</span>
+        <span class="f-div">|</span>
+        <span>E-mail: kwpark@samwoofg.co.kr</span>
+      </div>
+      <div class="footer-copy">
+        COPYRIGHT © SAMWOO F&amp;G ALL RIGHTS RESERVED.
+      </div>
+    </div>
+  </footer>
+
+  <!-- 토스트 메시지 -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

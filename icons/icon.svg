@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#1e3a8a"/>
+  <!-- 헬멧 아이콘 -->
+  <ellipse cx="256" cy="240" rx="130" ry="90" fill="#ffffff"/>
+  <rect x="126" y="295" width="260" height="30" rx="15" fill="#ffffff"/>
+  <!-- 방패 심볼 -->
+  <path d="M256 130 L306 160 L306 220 Q306 260 256 280 Q206 260 206 220 L206 160 Z" fill="#3b82f6"/>
+  <path d="M240 200 L252 215 L276 188" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- 하단 텍스트 배경 -->
+  <rect x="80" y="350" width="352" height="100" rx="16" fill="rgba(255,255,255,0.12)"/>
+  <!-- 안전 문자 (S) -->
+  <text x="256" y="420" font-family="Arial, sans-serif" font-size="52" font-weight="700" text-anchor="middle" fill="#ffffff">SAFETY</text>
+</svg>

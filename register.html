@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>회원가입 - 삼우에프앤지 안전 교육장</title>
+  <meta name="theme-color" content="#1e3a8a" />
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="css/register.css" />
+</head>
+<body class="login-page reg-page">
+
+  <!-- 배경 -->
+  <div class="bg-image"></div>
+  <div class="bg-overlay"></div>
+
+  <!-- 상단 헤더 -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-logo">
+        <div class="logo-emblem">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="52" height="60" style="display:block;">
+            <circle cx="100" cy="135" r="90" fill="#D8DCE4"/>
+            <circle cx="100" cy="135" r="90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-opacity="0.9"/>
+            <circle cx="100" cy="135" r="84" fill="#F0F2F6"/>
+            <circle cx="100" cy="135" r="84" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.8"/>
+            <circle cx="100" cy="135" r="82" fill="none" stroke="#B8C0CC" stroke-width="1.5"/>
+            <circle cx="100" cy="135" r="80" fill="#ECEEF4"/>
+            <path d="M100,190 L61,172 L59,116 Q59,102 68,95 L100,82 L132,95 Q141,102 141,116 L139,172 Z" fill="#D0D4DE"/>
+            <path d="M85,82 Q92,75 100,71 Q108,75 115,82" fill="none" stroke="#D0D4DE" stroke-width="7" stroke-linecap="round"/>
+            <path d="M100,185 L64,168 L62,115 Q62,103 70,97 L100,85 L130,97 Q138,103 138,115 L136,168 Z" fill="#E8ECF2"/>
+            <path d="M86,85 Q93,78 100,74 Q107,78 114,85" fill="none" stroke="#E8ECF2" stroke-width="5" stroke-linecap="round"/>
+            <path d="M100,85 L70,97 Q62,103 62,115 L64,168 L100,185" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.8"/>
+            <line x1="100" y1="82" x2="100" y2="190" stroke="#C8D0DC" stroke-width="1.2"/>
+            <path d="M100,85 L70,97 Q62,103 62,115 L64,168 L100,185 Z" fill="#FFFFFF" fill-opacity="0.15"/>
+            <text x="102" y="157" font-family="Arial Black,Impact,sans-serif" font-size="60" font-weight="900" font-style="italic" text-anchor="middle" fill="#7A4000" fill-opacity="0.45" letter-spacing="-3">SW</text>
+            <text x="100" y="155" font-family="Arial Black,Impact,sans-serif" font-size="60" font-weight="900" font-style="italic" text-anchor="middle" fill="none" stroke="#7A4800" stroke-width="6" stroke-linejoin="round" letter-spacing="-3">SW</text>
+            <text x="100" y="155" font-family="Arial Black,Impact,sans-serif" font-size="60" font-weight="900" font-style="italic" text-anchor="middle" fill="#FFB800" letter-spacing="-3">SW</text>
+            <text x="100" y="153" font-family="Arial Black,Impact,sans-serif" font-size="60" font-weight="900" font-style="italic" text-anchor="middle" fill="none" stroke="#FFE566" stroke-width="1.5" stroke-opacity="0.7" letter-spacing="-3">SW</text>
+            <path d="M88,57 L112,57 L109,51 L91,51 Z" fill="#D8DCE6" stroke="#C0C6D2" stroke-width="1"/>
+            <rect x="93" y="41" width="14" height="12" rx="2" fill="#D8DCE6" stroke="#C0C6D2" stroke-width="1"/>
+            <rect x="89" y="37" width="22" height="6" rx="3" fill="#DCE0EA" stroke="#C4CAD6" stroke-width="1"/>
+            <line x1="94" y1="38" x2="94" y2="52" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.7"/>
+            <ellipse cx="100" cy="31" rx="16" ry="11" fill="#D8DCE6" stroke="#C4CAD6" stroke-width="1.5"/>
+            <ellipse cx="100" cy="31" rx="9" ry="6.5" fill="#ECEEF4" fill-opacity="0.8"/>
+            <ellipse cx="95" cy="27" rx="5" ry="3.5" fill="#FFFFFF" opacity="0.85"/>
+            <path d="M86,27 Q93,20 100,20 Q107,20 114,27" fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.7" stroke-linecap="round"/>
+            <g stroke="#C8CCD6" stroke-linecap="round" opacity="0.7">
+              <line x1="100" y1="17" x2="100" y2="10" stroke-width="1.5"/>
+              <line x1="112" y1="20" x2="117" y2="14" stroke-width="1.5"/>
+              <line x1="119" y1="27" x2="125" y2="23" stroke-width="1.2"/>
+              <line x1="120" y1="35" x2="127" y2="35" stroke-width="1.2"/>
+              <line x1="88"  y1="20" x2="83"  y2="14" stroke-width="1.5"/>
+              <line x1="81"  y1="27" x2="75"  y2="23" stroke-width="1.2"/>
+              <line x1="80"  y1="35" x2="73"  y2="35" stroke-width="1.2"/>
+            </g>
+          </svg>
+        </div>
+        <div class="logo-text-wrap">
+          <span class="logo-main-text">삼우에프앤지 안전 교육장</span>
+          <span class="logo-sub-text">Samwoo Safety Education Center</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 -->
+  <main class="login-main reg-main">
+    <div class="login-card reg-card">
+
+      <!-- 카드 헤더: 제목 + 닫기 버튼 -->
+      <div class="reg-card-header">
+        <div>
+          <h1 class="reg-title">회원가입</h1>
+          <p class="reg-subtitle">삼우에프앤지 안전 교육장 계정을 생성합니다</p>
+        </div>
+        <button type="button" class="reg-close-btn" onclick="window.location.href='index.html'" title="창 닫기">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form id="reg-form" class="reg-form" onsubmit="handleRegister(event)" novalidate>
+
+        <!-- 아이디 / 이름 -->
+        <div class="reg-row">
+          <div class="reg-field">
+            <label class="reg-label" for="reg-id">아이디 <span class="req">*</span></label>
+            <input type="text" id="reg-id" class="reg-input" placeholder="아이디" autocomplete="username" />
+            <span class="field-msg" id="msg-id"></span>
+          </div>
+          <div class="reg-field">
+            <label class="reg-label" for="reg-name">이름 <span class="req">*</span></label>
+            <input type="text" id="reg-name" class="reg-input" placeholder="이름을 입력하세요" />
+            <span class="field-msg" id="msg-name"></span>
+          </div>
+        </div>
+
+        <!-- 비밀번호 / 비밀번호 확인 -->
+        <div class="reg-row">
+          <div class="reg-field">
+            <label class="reg-label" for="reg-pw">비밀번호 <span class="req">*</span></label>
+            <div class="pw-input-wrap">
+              <input type="password" id="reg-pw" class="reg-input" placeholder="••••••" autocomplete="new-password" name="new-password" />
+              <button type="button" class="pw-toggle-btn" onclick="toggleRegPw('reg-pw','eye1')" tabindex="-1">
+                <i class="fas fa-eye" id="eye1"></i>
+              </button>
+            </div>
+            <span class="field-msg" id="msg-pw"></span>
+          </div>
+          <div class="reg-field">
+            <label class="reg-label" for="reg-pw2">비밀번호 확인 <span class="req">*</span></label>
+            <div class="pw-input-wrap">
+              <input type="password" id="reg-pw2" class="reg-input" placeholder="비밀번호를 다시 입력하세요." autocomplete="new-password" />
+              <button type="button" class="pw-toggle-btn" onclick="toggleRegPw('reg-pw2','eye2')" tabindex="-1">
+                <i class="fas fa-eye" id="eye2"></i>
+              </button>
+            </div>
+            <span class="field-msg" id="msg-pw2"></span>
+          </div>
+        </div>
+
+        <!-- 전화번호 / 소속 부서 -->
+        <div class="reg-row">
+          <div class="reg-field">
+            <label class="reg-label" for="reg-tel">전화번호 <span class="req">*</span></label>
+            <input type="tel" id="reg-tel" class="reg-input" placeholder="010-0000-0000" maxlength="13" />
+            <span class="field-msg" id="msg-tel"></span>
+          </div>
+          <div class="reg-field">
+            <label class="reg-label" for="reg-dept">소속 부서 <span class="req">*</span></label>
+            <select id="reg-dept" class="reg-input reg-select">
+              <option value="">부서를 선택하세요</option>
+              <option value="평택TC">평택TC</option>
+              <option value="인천TC">인천TC</option>
+              <option value="목포TC">목포TC</option>
+              <option value="화성TDC">화성TDC</option>
+              <option value="광주TDC">광주TDC</option>
+              <option value="HVAC">HVAC</option>
+              <option value="냉장사업부">냉장사업부</option>
+            </select>
+            <span class="field-msg" id="msg-dept"></span>
+          </div>
+        </div>
+
+        <!-- 업무구분 (전체 너비) -->
+        <div class="reg-field full-width">
+          <label class="reg-label" for="reg-role">업무구분 <span class="req">*</span></label>
+          <select id="reg-role" class="reg-input reg-select">
+            <option value="">업무구분을 선택하세요</option>
+            <option value="가전(1톤,기간포함)">가전(1톤,기간포함)</option>
+            <option value="에어컨">에어컨</option>
+            <option value="가전전문기사">가전전문기사</option>
+            <option value="에어컨전문기사">에어컨전문기사</option>
+            <option value="스텝">스텝</option>
+            <option value="보관하역">보관하역</option>
+            <option value="HVAC">HVAC</option>
+            <option value="CDC운송">CDC운송</option>
+          </select>
+          <span class="field-msg" id="msg-role"></span>
+        </div>
+
+        <!-- 차량번호 (전체 너비) -->
+        <div class="reg-field full-width">
+          <label class="reg-label" for="reg-car">차량번호</label>
+          <input
+            type="text" id="reg-car" class="reg-input"
+            placeholder="차량번호(화물차량만 입력, 전문기사는 주기사 차량번호 입력)"
+          />
+        </div>
+
+        <!-- 약관 동의 -->
+        <div class="terms-wrap">
+          <label class="terms-label" id="terms-label-1">
+            <input type="checkbox" id="chk-terms" class="terms-chk" />
+            <span class="terms-custom"></span>
+            <span class="terms-text">
+              <span class="req">*</span> 이용약관에 동의합니다
+            </span>
+            <button type="button" class="terms-view-btn" onclick="openModal('modal-terms')">약관 보기</button>
+          </label>
+          <span class="field-msg" id="msg-terms"></span>
+
+          <label class="terms-label" id="terms-label-2">
+            <input type="checkbox" id="chk-privacy" class="terms-chk" />
+            <span class="terms-custom"></span>
+            <span class="terms-text">
+              <span class="req">*</span> 개인정보 수집 및 이용에 동의합니다
+            </span>
+            <button type="button" class="terms-view-btn" onclick="openModal('modal-privacy')">내용 보기</button>
+          </label>
+          <span class="field-msg" id="msg-privacy"></span>
+        </div>
+
+        <!-- 가입 버튼 -->
+        <button type="submit" class="reg-btn" id="reg-btn">
+          <span id="reg-btn-text">회원가입</span>
+          <span id="reg-btn-spinner" class="btn-spinner hidden">
+            <i class="fas fa-spinner fa-spin"></i>
+          </span>
+        </button>
+
+        <!-- 로그인으로 -->
+        <p class="reg-login-link">
+          이미 계정이 있으신가요?
+          <a href="index.html">로그인</a>
+        </p>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <span>㈜삼우에프엔지</span>
+        <span class="f-div">|</span>
+        <span>센터장: 박기웅</span>
+        <span class="f-div">|</span>
+        <span>사업자등록번호: 124-81-31846</span>
+        <span class="f-div">|</span>
+        <span>주소: 인천광역시 중구 항동7가 56</span>
+        <span class="f-div">|</span>
+        <span>Tel: 1577-3921</span>
+      </div>
+      <div class="footer-copy">COPYRIGHT © SAMWOO F&amp;G ALL RIGHTS RESERVED.</div>
+    </div>
+  </footer>
+
+  <!-- ===== 이용약관 모달 ===== -->
+  <div class="reg-modal-overlay hidden" id="modal-terms" onclick="closeModalOutside(event,'modal-terms')">
+    <div class="reg-modal-box">
+      <div class="reg-modal-header">
+        <h3><i class="fas fa-file-alt"></i> 이용약관</h3>
+        <button class="reg-modal-close" onclick="closeModal('modal-terms')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="reg-modal-body">
+        <h4>제1조 (목적)</h4>
+        <p>이 약관은 삼우에프엔지(이하 "회사")가 운영하는 안전 교육장 LMS(이하 "서비스")의 이용 조건 및 절차, 회사와 회원 간의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+        <h4>제2조 (정의)</h4>
+        <p>"회원"이란 회사의 서비스에 접속하여 이 약관에 따라 회사와 이용계약을 체결하고 회사가 제공하는 서비스를 이용하는 자를 말합니다.</p>
+        <h4>제3조 (서비스 이용)</h4>
+        <p>서비스는 안전 교육 콘텐츠 열람, 교육 이수 관리, 공지사항 확인 등의 기능을 제공합니다. 회원은 본 서비스를 업무 목적으로만 사용하여야 하며, 교육 자료를 외부에 무단 배포해서는 안 됩니다.</p>
+        <h4>제4조 (회원의 의무)</h4>
+        <ul>
+          <li>타인의 정보를 도용하거나 허위 정보를 등록하지 않습니다.</li>
+          <li>서비스 운영을 방해하는 행위를 하지 않습니다.</li>
+          <li>법령 및 회사 정책을 준수합니다.</li>
+        </ul>
+        <h4>제5조 (서비스 중단)</h4>
+        <p>회사는 시스템 점검·장애 등 불가피한 사유로 서비스 제공을 일시 중단할 수 있으며, 이 경우 사전 공지합니다.</p>
+        <h4>제6조 (약관의 변경)</h4>
+        <p>회사는 필요한 경우 약관을 변경할 수 있으며, 변경된 약관은 공지 후 7일이 경과한 날부터 효력이 발생합니다.</p>
+      </div>
+      <div class="reg-modal-footer">
+        <button class="reg-modal-agree-btn" onclick="agreeTerms('chk-terms','modal-terms')">동의하고 닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 개인정보처리방침 모달 ===== -->
+  <div class="reg-modal-overlay hidden" id="modal-privacy" onclick="closeModalOutside(event,'modal-privacy')">
+    <div class="reg-modal-box">
+      <div class="reg-modal-header">
+        <h3><i class="fas fa-shield-alt"></i> 개인정보 수집 및 이용 동의</h3>
+        <button class="reg-modal-close" onclick="closeModal('modal-privacy')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="reg-modal-body">
+        <h4>수집하는 개인정보 항목</h4>
+        <ul>
+          <li><strong>필수:</strong> 아이디, 이름, 비밀번호, 전화번호, 소속 부서, 업무구분</li>
+          <li><strong>선택:</strong> 차량번호</li>
+        </ul>
+        <h4>개인정보 수집 및 이용 목적</h4>
+        <ul>
+          <li>안전 교육 이수 관리 및 이력 기록</li>
+          <li>교육 참여 안내 및 공지사항 전달</li>
+          <li>서비스 이용에 관한 민원 처리</li>
+          <li>법령에 따른 산업안전 의무 이행</li>
+        </ul>
+        <h4>개인정보 보유 및 이용 기간</h4>
+        <p>재직 기간 및 법령에서 정한 보유 기간 동안 보관하며, 퇴직 또는 계정 삭제 요청 시 지체 없이 파기합니다. 단, 관련 법령에 의해 보존할 필요가 있는 경우에는 해당 기간 동안 보관합니다.</p>
+        <h4>개인정보 제3자 제공</h4>
+        <p>회사는 원칙적으로 회원의 개인정보를 제3자에게 제공하지 않습니다. 다만, 법령의 규정에 의한 경우는 예외로 합니다.</p>
+        <h4>동의 거부 권리</h4>
+        <p>회원은 개인정보 수집 및 이용에 대한 동의를 거부할 수 있으나, 필수 항목 미동의 시 서비스 이용이 제한됩니다.</p>
+      </div>
+      <div class="reg-modal-footer">
+        <button class="reg-modal-agree-btn" onclick="agreeTerms('chk-privacy','modal-privacy')">동의하고 닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 가입 완료 모달 -->
+  <div class="reg-modal-overlay hidden" id="modal-done" onclick="closeModalOutside(event,'modal-done')">
+    <div class="reg-modal-box reg-done-box">
+      <div class="done-icon"><i class="fas fa-check-circle"></i></div>
+      <h3 class="done-title">가입 신청 완료!</h3>
+      <p class="done-desc">
+        회원가입 신청이 완료되었습니다.<br>
+        관리자 승인 후 로그인하실 수 있습니다.
+      </p>
+      <button class="reg-modal-agree-btn done-login-btn" onclick="window.location.href='index.html'">
+        <i class="fas fa-sign-in-alt"></i> 로그인 페이지로
+      </button>
+    </div>
+  </div>
+
+  <!-- 토스트 -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>

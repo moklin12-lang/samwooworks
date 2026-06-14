@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SW 아이콘 생성기</title>
+<style>
+  body { font-family: sans-serif; padding: 30px; background: #f0f4f8; }
+  h2 { color: #1e3a8a; }
+  .canvases { display: flex; gap: 20px; align-items: flex-end; margin: 20px 0; }
+  canvas { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .dl-btn {
+    display: inline-block; margin-top: 8px; padding: 8px 16px;
+    background: #1e3a8a; color: #fff; border-radius: 8px;
+    text-decoration: none; font-size: 0.85rem; font-weight: 600;
+  }
+  .info { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px;
+    padding: 14px 18px; margin: 16px 0; font-size: 0.9rem; }
+  .step { background: #d1fae5; border: 1px solid #10b981; border-radius: 8px;
+    padding: 14px 18px; margin: 16px 0; font-size: 0.9rem; line-height: 1.7; }
+</style>
+</head>
+<body>
+<h2>🛡️ SW 아이콘 PNG 생성기</h2>
+
+<div class="info">
+  ⬇️ 아래 두 파일을 다운로드한 뒤, <code>icons/</code> 폴더에 업로드하면 404 에러가 해결됩니다.
+</div>
+
+<div class="canvases">
+  <div>
+    <div style="font-size:0.8rem;color:#666;margin-bottom:4px;">192 × 192 px</div>
+    <canvas id="c192" width="192" height="192"></canvas><br>
+    <a id="dl192" class="dl-btn" download="icon-192.png">⬇ icon-192.png</a>
+  </div>
+  <div>
+    <div style="font-size:0.8rem;color:#666;margin-bottom:4px;">512 × 512 px</div>
+    <canvas id="c512" width="512" height="512"></canvas><br>
+    <a id="dl512" class="dl-btn" download="icon-512.png">⬇ icon-512.png</a>
+  </div>
+</div>
+
+<div class="step">
+  <strong>📌 사용 방법:</strong><br>
+  1. 위 버튼으로 <code>icon-192.png</code>, <code>icon-512.png</code> 다운로드<br>
+  2. Genspark 에디터에서 <code>icons/</code> 폴더에 두 파일 업로드<br>
+  3. 완료! 이 <code>generate-icons.html</code> 파일은 이후 삭제해도 됩니다.
+</div>
+
+<script>
+const svgTemplate = (size) => {
+  const s = size;
+  const cx = s / 2;        // 100
+  const scale = s / 200;   // 비율
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 200 200">
+  <!-- 배경 (둥근 사각형, 네이비) -->
+  <rect width="200" height="200" rx="36" fill="#1e3a8a"/>
+  <!-- 메달 외곽 링 -->
+  <circle cx="100" cy="108" r="72" fill="#D8DCE4"/>
+  <circle cx="100" cy="108" r="72" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-opacity="0.9"/>
+  <circle cx="100" cy="108" r="67" fill="#F0F2F6"/>
+  <circle cx="100" cy="108" r="65" fill="none" stroke="#B8C0CC" stroke-width="1.5"/>
+  <circle cx="100" cy="108" r="63" fill="#ECEEF4"/>
+  <!-- 방패 그림자 -->
+  <path d="M100,156 L68,141 L66,99 Q66,89 73,83 L100,72 L127,83 Q134,89 134,99 L132,141 Z" fill="#D0D4DE"/>
+  <!-- 방패 본체 -->
+  <path d="M100,152 L71,138 L69,98 Q69,89 75,84 L100,74 L125,84 Q131,89 131,98 L129,138 Z" fill="#E8ECF2"/>
+  <!-- 방패 왼쪽 하이라이트 -->
+  <path d="M100,74 L75,84 Q69,89 69,98 L71,138 L100,152 Z" fill="#FFFFFF" fill-opacity="0.15"/>
+  <!-- 방패 중앙선 -->
+  <line x1="100" y1="72" x2="100" y2="156" stroke="#C8D0DC" stroke-width="1"/>
+  <!-- SW 그림자 -->
+  <text x="102" y="132" font-family="Arial Black,Impact,sans-serif" font-size="48" font-weight="900" font-style="italic" text-anchor="middle" fill="#7A4000" fill-opacity="0.45" letter-spacing="-2">SW</text>
+  <!-- SW 외곽선 -->
+  <text x="100" y="130" font-family="Arial Black,Impact,sans-serif" font-size="48" font-weight="900" font-style="italic" text-anchor="middle" fill="none" stroke="#7A4800" stroke-width="5" stroke-linejoin="round" letter-spacing="-2">SW</text>
+  <!-- SW 본체 골드 -->
+  <text x="100" y="130" font-family="Arial Black,Impact,sans-serif" font-size="48" font-weight="900" font-style="italic" text-anchor="middle" fill="#FFB800" letter-spacing="-2">SW</text>
+  <!-- SW 하이라이트 -->
+  <text x="100" y="128" font-family="Arial Black,Impact,sans-serif" font-size="48" font-weight="900" font-style="italic" text-anchor="middle" fill="none" stroke="#FFE566" stroke-width="1.5" stroke-opacity="0.7" letter-spacing="-2">SW</text>
+  <!-- 경광등 받침 -->
+  <path d="M90,48 L110,48 L108,43 L92,43 Z" fill="#D8DCE6" stroke="#C0C6D2" stroke-width="1"/>
+  <rect x="94" y="34" width="12" height="10" rx="2" fill="#D8DCE6" stroke="#C0C6D2" stroke-width="1"/>
+  <rect x="91" y="30" width="18" height="5" rx="3" fill="#DCE0EA" stroke="#C4CAD6" stroke-width="1"/>
+  <!-- 경광등 돔 -->
+  <ellipse cx="100" cy="24" rx="13" ry="9" fill="#D8DCE6" stroke="#C4CAD6" stroke-width="1.5"/>
+  <ellipse cx="100" cy="24" rx="7" ry="5" fill="#ECEEF4" fill-opacity="0.8"/>
+  <ellipse cx="96" cy="21" rx="4" ry="3" fill="#FFFFFF" opacity="0.85"/>
+</svg>`;
+};
+
+function drawIcon(canvasId, dlId, size) {
+  const canvas = document.getElementById(canvasId);
+  const ctx    = canvas.getContext('2d');
+  const svg    = svgTemplate(size);
+  const blob   = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+  const url    = URL.createObjectURL(blob);
+  const img    = new Image();
+
+  img.onload = () => {
+    ctx.clearRect(0, 0, size, size);
+    ctx.drawImage(img, 0, 0, size, size);
+    URL.revokeObjectURL(url);
+    // 다운로드 링크에 PNG dataURL 연결
+    const pngUrl = canvas.toDataURL('image/png');
+    const a = document.getElementById(dlId);
+    a.href = pngUrl;
+    a.style.opacity = '1';
+    console.log(`✅ ${size}x${size} 생성 완료`);
+  };
+  img.onerror = (e) => {
+    console.error('SVG 렌더 실패:', e);
+  };
+  img.src = url;
+}
+
+window.addEventListener('load', () => {
+  drawIcon('c192', 'dl192', 192);
+  drawIcon('c512', 'dl512', 512);
+});
+</script>
+</body>
+</html>

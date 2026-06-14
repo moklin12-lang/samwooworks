@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>동영상 정밀 진단</title>
+<style>
+  body { font-family: sans-serif; padding: 30px; background: #0f172a; color: #e2e8f0; }
+  h2 { color: #60a5fa; }
+  .card { background: #1e293b; border-radius: 12px; padding: 20px; margin: 16px 0; }
+  .ok   { color: #4ade80; font-weight: 700; }
+  .err  { color: #f87171; font-weight: 700; }
+  .warn { color: #facc15; font-weight: 700; }
+  .info { color: #94a3b8; font-size: 0.85rem; }
+  .log-line { padding: 5px 0; border-bottom: 1px solid #0f172a; font-size: 0.85rem; }
+  video { width:100%; max-width:480px; border-radius:8px; background:#000; display:block; margin-top:12px; }
+</style>
+</head>
+<body>
+<h2>🔬 동영상 정밀 진단</h2>
+
+<div class="card" id="out">진단 중...</div>
+
+<script>
+const URL1 = 'https://omuchkxgzjtyhzadjozp.supabase.co/storage/v1/object/public/video/posts/post_1781417001487_1781417001487.mp4';
+
+function log(msg, type='info') {
+  const d = document.getElementById('out');
+  const cls = type==='ok'?'ok':type==='err'?'err':type==='warn'?'warn':'info';
+  d.innerHTML += `<div class="log-line"><span class="${cls}">${msg}</span></div>`;
+}
+
+async function run() {
+  document.getElementById('out').innerHTML = '';
+
+  // ── 1) 브라우저 코덱 지원 ──
+  log('━━━ ① 브라우저 코덱 지원 ━━━');
+  const tv = document.createElement('video');
+  [
+    ['H.264 (AVC)',  'video/mp4; codecs="avc1.42E01E"'],
+    ['H.265 HEVC hvc1','video/mp4; codecs="hvc1"'],
+    ['H.265 HEVC hev1','video/mp4; codecs="hev1"'],
+    ['video/mp4 기본','video/mp4'],
+    ['video/quicktime','video/quicktime'],
+  ].forEach(([label, type]) => {
+    const r = tv.canPlayType(type);
+    const t = r==='probably'?'ok':r==='maybe'?'warn':'err';
+    const i = r==='probably'?'✅':r==='maybe'?'⚠️':'❌';
+    log(`${i} ${label} → "${r}"`, t);
+  });
+
+  // ── 2) HEAD 요청 ──
+  log('');
+  log('━━━ ② HEAD 요청 (서버 응답 헤더) ━━━');
+  try {
+    const r = await fetch(URL1, { method:'HEAD' });
+    log(`HTTP: ${r.status} ${r.statusText}`, r.ok?'ok':'err');
+    log(`Content-Type: ${r.headers.get('content-type')||'없음'}`);
+    log(`Content-Length: ${r.headers.get('content-length')||'없음'}`);
+    const ar = r.headers.get('accept-ranges');
+    log(`Accept-Ranges: ${ar||'없음'}`, ar?'ok':'warn');
+    const ao = r.headers.get('access-control-allow-origin');
+    log(`Access-Control-Allow-Origin: ${ao||'없음'}`, ao?'ok':'warn');
+  } catch(e) {
+    log(`HEAD 실패: ${e.message}`, 'err');
+  }
+
+  // ── 3) Range 요청 ──
+  log('');
+  log('━━━ ③ Range 요청 테스트 ━━━');
+  try {
+    const r = await fetch(URL1, { headers:{ 'Range':'bytes=0-1023' } });
+    log(`Range 응답: HTTP ${r.status}`, r.status===206?'ok':'warn');
+    log(`Content-Range: ${r.headers.get('content-range')||'없음'}`);
+  } catch(e) {
+    log(`Range 실패: ${e.message}`, 'err');
+  }
+
+  // ── 4) video 태그 직접 테스트 ──
+  log('');
+  log('━━━ ④ video 태그 직접 재생 테스트 ━━━');
+  const vid = document.createElement('video');
+  vid.controls = true; vid.playsInline = true; vid.muted = false;
+  // crossorigin 없이 먼저 시도
+  vid.preload = 'auto';
+
+  vid.addEventListener('loadstart',    () => log('loadstart 이벤트 발생'));
+  vid.addEventListener('durationchange',()=> log(`durationchange: ${vid.duration?.toFixed(2)}초`));
+  vid.addEventListener('loadedmetadata',()=> {
+    const w=vid.videoWidth, h=vid.videoHeight;
+    log(`loadedmetadata: ${w}×${h}`, (w>0&&h>0)?'ok':'err');
+    if(w===0&&h===0) log('⚠️ 해상도 0×0 → HEVC 코덱으로 브라우저 디코딩 실패 가능성 높음','err');
+  });
+  vid.addEventListener('loadeddata',   () => log('loadeddata 이벤트 발생 ✅','ok'));
+  vid.addEventListener('canplay',      () => log('canplay → 재생 가능 ✅','ok'));
+  vid.addEventListener('canplaythrough',()=> log('canplaythrough ✅','ok'));
+  vid.addEventListener('error', () => {
+    const c = vid.error?.code;
+    const msgs = {
+      1:'MEDIA_ERR_ABORTED(1) — 재생 중단',
+      2:'MEDIA_ERR_NETWORK(2) — 네트워크 오류',
+      3:'MEDIA_ERR_DECODE(3) — 디코딩 실패 ← 코덱 불일치',
+      4:'MEDIA_ERR_SRC_NOT_SUPPORTED(4) — 포맷/코덱 미지원 ← HEVC 확정'
+    };
+    log(`❌ video error: ${msgs[c]||'알수없음('+c+')'}`, 'err');
+    if(c===4) log('→ 이 영상은 HEVC(H.265) 코덱입니다. H.264로 변환 필요','err');
+    if(c===3) log('→ 파일 손상 또는 컨테이너-코덱 불일치','err');
+    if(c===2) log('→ Supabase URL 접근 불가 / CORS 차단','err');
+  });
+
+  vid.src = URL1;
+  vid.load();
+  document.getElementById('out').appendChild(vid);
+
+  // ── 5) crossorigin 없이 재시도용 버튼 ──
+  const btn = document.createElement('button');
+  btn.textContent = '🔄 crossorigin 없이 재시도';
+  btn.style.cssText = 'margin-top:12px;padding:8px 18px;background:#3b82f6;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;';
+  btn.onclick = () => {
+    log('');
+    log('━━━ ⑤ crossorigin 제거 후 재시도 ━━━');
+    const vid2 = document.createElement('video');
+    vid2.controls = true; vid2.playsInline = true;
+    vid2.preload = 'auto';
+    // crossorigin 없음
+    vid2.addEventListener('loadedmetadata', () => {
+      log(`loadedmetadata: ${vid2.videoWidth}×${vid2.videoHeight}`, (vid2.videoWidth>0)?'ok':'err');
+    });
+    vid2.addEventListener('canplay', () => log('canplay ✅ (crossorigin 없이 성공!)','ok'));
+    vid2.addEventListener('error', () => {
+      log(`❌ error: ${vid2.error?.code}`, 'err');
+    });
+    vid2.src = URL1;
+    vid2.load();
+    document.getElementById('out').appendChild(vid2);
+  };
+  document.getElementById('out').appendChild(btn);
+}
+
+run();
+</script>
+</body>
+</html>
