@@ -1,0 +1,463 @@
+/* ===== 회원가입 전용 스타일 ===== */
+
+/* 회원가입 페이지 body — overflow 완전 해제하여 스크롤 허용 */
+body.reg-page {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+/* 메인 영역 - 스크롤 가능하도록 */
+.reg-main {
+  align-items: center;
+  justify-content: flex-start;
+  padding: 30px 20px 50px;
+  min-height: unset;
+  height: auto;
+  overflow: visible;
+  flex: none;
+}
+
+/* 카드 - 로그인보다 넓게 */
+.reg-card {
+  max-width: 540px !important;
+  width: 100% !important;
+  padding: 36px 40px 32px !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 auto;
+}
+
+/* 카드 헤더 (제목 + 닫기 버튼 행) */
+.reg-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  gap: 12px;
+}
+
+/* 닫기 버튼 */
+.reg-close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.85);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 4px;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+.reg-close-btn:hover {
+  background: rgba(239,68,68,0.75);
+  border-color: rgba(239,68,68,0.6);
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+/* 제목 */
+.reg-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.reg-subtitle {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 0;
+}
+
+/* 폼 */
+.reg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 2열 행 */
+.reg-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* 개별 필드 */
+.reg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.reg-field.full-width {
+  grid-column: 1 / -1;
+}
+
+/* 라벨 */
+.reg-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+}
+.req {
+  color: #facc15;
+  margin-left: 1px;
+}
+
+/* 입력창 */
+.reg-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  background: rgba(255,255,255,0.95);
+  border: 1.5px solid rgba(255,255,255,0.5);
+  border-radius: 7px;
+  font-size: 0.88rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #1e293b;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.reg-input::placeholder { color: #94a3b8; }
+.reg-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.22);
+  background: #ffffff;
+}
+.reg-input.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.18);
+}
+.reg-input.success {
+  border-color: #22c55e;
+}
+
+/* 셀렉트박스 */
+.reg-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* 비밀번호 래퍼 */
+.pw-input-wrap {
+  position: relative;
+}
+.pw-input-wrap .reg-input {
+  padding-right: 40px;
+}
+
+/* 필드 에러/성공 메시지 */
+.field-msg {
+  font-size: 0.72rem;
+  min-height: 16px;
+  padding-left: 2px;
+  display: block;
+}
+.field-msg.err { color: #fca5a5; }
+.field-msg.ok  { color: #86efac; }
+
+/* ===== 약관 동의 ===== */
+.terms-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.terms-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  flex-wrap: wrap;
+}
+.terms-chk { display: none; }
+.terms-custom {
+  width: 17px;
+  height: 17px;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.1);
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.15s;
+}
+.terms-chk:checked + .terms-custom {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+.terms-chk:checked + .terms-custom::after {
+  content: '';
+  position: absolute;
+  left: 3px; top: 0px;
+  width: 5px; height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+.terms-text {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.85);
+  flex: 1;
+  user-select: none;
+}
+.terms-view-btn {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #facc15;
+  text-decoration: underline;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.terms-view-btn:hover { color: #fde047; }
+
+/* ===== 가입 버튼 ===== */
+.reg-btn {
+  width: 100%;
+  height: 48px;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 7px;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 3px 14px rgba(29,78,216,0.45);
+  margin-top: 4px;
+}
+.reg-btn:hover  { background: #1e40af; box-shadow: 0 5px 20px rgba(29,78,216,0.55); }
+.reg-btn:active { transform: scale(0.98); }
+.reg-btn:disabled { background: #475569; cursor: not-allowed; box-shadow: none; }
+
+/* 로그인 링크 */
+.reg-login-link {
+  text-align: center;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.65);
+  margin-top: 2px;
+}
+.reg-login-link a {
+  color: #93c5fd;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.15s;
+}
+.reg-login-link a:hover { color: #bfdbfe; }
+
+/* ===== 모달 오버레이 ===== */
+.reg-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.reg-modal-overlay.hidden { display: none !important; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* 모달 박스 */
+.reg-modal-box {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  animation: slideUp 0.25s ease;
+  overflow: hidden;
+}
+@keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* 모달 헤더 */
+.reg-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+.reg-modal-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.reg-modal-header h3 i { color: #3b82f6; }
+.reg-modal-close {
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.reg-modal-close:hover { background: #f1f5f9; color: #475569; }
+
+/* 모달 본문 */
+.reg-modal-body {
+  padding: 18px 22px;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 0.88rem;
+  color: #334155;
+  line-height: 1.75;
+}
+.reg-modal-body h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 16px 0 6px;
+  padding-left: 8px;
+  border-left: 3px solid #3b82f6;
+}
+.reg-modal-body h4:first-child { margin-top: 0; }
+.reg-modal-body p { margin-bottom: 8px; }
+.reg-modal-body ul { padding-left: 18px; margin-bottom: 8px; }
+.reg-modal-body ul li { list-style: disc; margin-bottom: 4px; }
+
+/* 모달 푸터 */
+.reg-modal-footer {
+  padding: 14px 22px 18px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+.reg-modal-agree-btn {
+  height: 40px;
+  padding: 0 24px;
+  background: #1d4ed8;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 7px;
+  display: flex; align-items: center; gap: 6px;
+  transition: background 0.15s;
+  cursor: pointer;
+  border: none;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.reg-modal-agree-btn:hover { background: #1e40af; }
+
+/* ===== 가입 완료 모달 ===== */
+.reg-done-box {
+  max-width: 380px;
+  padding: 40px 32px;
+  text-align: center;
+  align-items: center;
+}
+.done-icon {
+  font-size: 3.5rem;
+  color: #22c55e;
+  margin-bottom: 16px;
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.done-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+.done-desc {
+  font-size: 0.88rem;
+  color: #64748b;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.done-login-btn {
+  width: 100%;
+  justify-content: center;
+  height: 44px;
+  font-size: 0.92rem;
+}
+
+/* ===== 반응형 ===== */
+
+/* 태블릿 (768px ~ 1023px) */
+@media (max-width: 1023px) {
+  .reg-main { padding: 24px 20px 44px; }
+  .reg-card { max-width: 500px !important; padding: 32px 32px 28px !important; }
+  .reg-title { font-size: 1.35rem; }
+}
+
+/* 모바일 (480px ~ 767px) */
+@media (max-width: 767px) {
+  .reg-main { padding: 20px 14px 40px; }
+  .reg-card { padding: 28px 20px 24px !important; }
+  .reg-title { font-size: 1.25rem; }
+  .reg-row  { grid-template-columns: 1fr; }
+  .reg-btn  { height: 50px; font-size: 1rem; }
+
+  /* 약관 모달 모바일 처리 */
+  .reg-modal-overlay { padding: 0; align-items: flex-end; }
+  .reg-modal-box {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 18px 18px 0 0;
+  }
+  .reg-modal-header { padding: 16px 18px 12px; }
+  .reg-modal-body   { padding: 14px 18px; }
+  .reg-modal-footer { padding: 12px 18px 20px; }
+
+  /* 완료 모달 */
+  .reg-done-box { padding: 32px 24px; }
+}
+
+/* 소형 모바일 (~479px) */
+@media (max-width: 479px) {
+  .reg-main { padding: 12px 10px 36px; }
+  .reg-card {
+    padding: 22px 14px 20px !important;
+    border-radius: 10px;
+  }
+  .reg-title    { font-size: 1.1rem; }
+  .reg-subtitle { font-size: 0.8rem; }
+  .reg-input    { height: 44px; font-size: 0.85rem; }
+  .reg-label    { font-size: 0.78rem; }
+  .terms-wrap   { padding: 10px 12px; }
+  .terms-text   { font-size: 0.78rem; }
+  .reg-btn      { height: 48px; }
+  .reg-login-link { font-size: 0.78rem; }
+  .reg-modal-agree-btn { width: 100%; justify-content: center; }
+}
+
+/* 화면 높이가 작을 때 카드가 잘리지 않도록 */
+@media (max-height: 800px) {
+  .reg-main { padding-top: 16px; padding-bottom: 40px; }
+}
+@media (max-height: 650px) {
+  .reg-main { padding-top: 10px; padding-bottom: 30px; }
+}
