@@ -1,4 +1,5 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { api } from "@/lib/api";
 import ciLogo from "@/imports/ci_symbol_lightgray.png";
 import bgPhoto from "@/imports/5fae3958-3b96-4023-a0ea-019570316761.jpeg";
 import {
@@ -388,8 +389,22 @@ function PostListView({ section, posts, adminFlag, dept, onPostsChange, title, s
   const [filter, setFilter] = useState("전체");
   const cats = section === "regulations" ? ["전체", ...Array.from(new Set(posts.filter(p => p.section === section).map(p => p.category || "기타")))] : [];
   const filtered = posts.filter(p => p.section === section && (filter === "전체" || p.category === filter));
-  const save = (p: Post) => posts.find(x => x.id === p.id) ? onPostsChange(posts.map(x => x.id === p.id ? p : x)) : onPostsChange([p, ...posts]);
-  const del = (id: number) => { setSel(null); onPostsChange(posts.filter(p => p.id !== id)); };
+  const save = async (p: Post) => {
+    try {
+      if (posts.find(x => x.id === p.id)) {
+        await api.updatePost(p.id, p);
+        onPostsChange(posts.map(x => x.id === p.id ? p : x));
+      } else {
+        const created = await api.createPost(p);
+        onPostsChange([{ ...p, id: created.id }, ...posts]);
+      }
+    } catch { onPostsChange(posts.find(x => x.id === p.id) ? posts.map(x => x.id === p.id ? p : x) : [p, ...posts]); }
+  };
+  const del = async (id: number) => {
+    setSel(null);
+    try { await api.deletePost(id); } catch {}
+    onPostsChange(posts.filter(p => p.id !== id));
+  };
   return (
     <div className="p-4 sm:p-6 space-y-4">
       {editing !== undefined && <PostEditor section={section} post={editing} dept={dept} onSave={save} onClose={() => setEditing(undefined)} />}
@@ -476,22 +491,41 @@ function AdminView({ user, registrations, setRegistrations, popups, setPopups, l
   }, [myRegs, memberSearch, memberSort]);
 
   const toggleSort = (key: keyof Registration) => setMemberSort(prev => ({ key, dir: prev.key === key && prev.dir === "asc" ? "desc" : "asc" }));
-  const approve = (id: string) => setRegistrations(prev => prev.map(r => r.id === id ? { ...r, status: "approved" } : r));
-  const reject  = (id: string) => setRegistrations(prev => prev.map(r => r.id === id ? { ...r, status: "rejected" } : r));
-  const delReg  = (id: string) => setRegistrations(prev => prev.filter(r => r.id !== id));
+  const approve = async (id: string) => {
+    const updated = registrations.find(r => r.id === id);
+    if (!updated) return;
+    const next = { ...updated, status: "approved" as const };
+    setRegistrations(prev => prev.map(r => r.id === id ? next : r));
+    try { await api.updateRegistration(id, next); } catch {}
+  };
+  const reject = async (id: string) => {
+    const updated = registrations.find(r => r.id === id);
+    if (!updated) return;
+    const next = { ...updated, status: "rejected" as const };
+    setRegistrations(prev => prev.map(r => r.id === id ? next : r));
+    try { await api.updateRegistration(id, next); } catch {}
+  };
+  const delReg = async (id: string) => {
+    setRegistrations(prev => prev.filter(r => r.id !== id));
+    try { await api.deleteRegistration(id); } catch {}
+  };
   const downloadCsv = () => {
     const rows = [["이름","사원번호","팀","소속부서","연락처","이메일","신청일"], ...sortedMembers.map(r => [r.name,r.employeeId,r.team,r.department,r.phone,r.email,r.requestDate])];
     const blob = new Blob(["﻿" + rows.map(r => r.join(",")).join("\n")], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "가입자현황.csv"; a.click(); URL.revokeObjectURL(url);
   };
-  const savePopup = () => {
+  const savePopup = async () => {
     const draft = { ...popupDraft, dept: selPopupDept };
     setPopups(prev => prev.find(p => p.dept === draft.dept) ? prev.map(p => p.dept === draft.dept ? draft : p) : [...prev, draft]);
     setPopupDraft(draft);
+    try { await api.updatePopup(selPopupDept, draft); } catch {}
   };
-  const togglePopupVisible = () => {
-    setPopups(prev => prev.map(p => p.dept === selPopupDept ? { ...p, visible: !p.visible } : p));
-    setPopupDraft(prev => ({ ...prev, visible: !prev.visible }));
+  const togglePopupVisible = async () => {
+    const next = !( popups.find(p => p.dept === selPopupDept) ?? popupDraft ).visible;
+    setPopups(prev => prev.map(p => p.dept === selPopupDept ? { ...p, visible: next } : p));
+    setPopupDraft(prev => ({ ...prev, visible: next }));
+    const current = popups.find(p => p.dept === selPopupDept) ?? popupDraft;
+    try { await api.updatePopup(selPopupDept, { ...current, visible: next }); } catch {}
   };
 
   const TABS: { key: AdminTab; label: string; icon: React.ElementType }[] = [
@@ -523,7 +557,7 @@ function AdminView({ user, registrations, setRegistrations, popups, setPopups, l
       {tab === "looker" && (
         <div className="space-y-4">
           <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 space-y-4">
-            <div className="flex items-center justify-between"><p className="text-sm font-semibold text-slate-700">Looker Studio URL 관리</p><button onClick={() => setLookerUrls(lookerDraft)} className="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700">전체 저장</button></div>
+            <div className="flex items-center justify-between"><p className="text-sm font-semibold text-slate-700">Looker Studio URL 관리</p><button onClick={async () => { setLookerUrls(lookerDraft); try { await Promise.all((["performance","nps","delivery","sales"] as (keyof LookerUrls)[]).map(k => api.updateLooker(k, lookerDraft[k]))); } catch {} }} className="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700">전체 저장</button></div>
             <p className="text-xs text-slate-400">각 페이지에 표시될 Looker Studio 보고서 URL을 입력하세요.</p>
             {([["performance","📊","대시보드 실적"],["nps","⭐","NPS 지표"],["delivery","🚚","납기준수율"],["sales","💰","매출 현황"]] as [keyof LookerUrls,string,string][]).map(([k,icon,label]) => (
               <div key={k}><label className={lbl}>{icon} {label}</label><div className="flex gap-2"><input value={lookerDraft[k]} onChange={e => setLookerDraft(prev => ({ ...prev, [k]: e.target.value }))} placeholder="https://lookerstudio.google.com/embed/reporting/..." className={inp + " flex-1 font-mono text-xs"} />{lookerDraft[k] && <span className="flex items-center text-emerald-600"><Check size={14} /></span>}</div></div>
@@ -716,11 +750,17 @@ function SignupModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
   const [agreeTerms, setAgreeTerms] = useState(false); const [agreePrivacy, setAgreePrivacy] = useState(false);
   const [err, setErr] = useState(""); const [termsOpen, setTermsOpen] = useState(false); const [privacyOpen, setPrivacyOpen] = useState(false);
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
-  const submit = () => {
+  const submit = async () => {
     if (!form.userId || !form.name || !form.password || !form.phone || !form.department || !form.jobType) return setErr("필수 항목을 모두 입력해주세요.");
     if (form.password !== form.passwordConfirm) return setErr("비밀번호가 일치하지 않습니다.");
     if (form.password.length < 4) return setErr("비밀번호는 4자 이상이어야 합니다.");
     if (!agreeTerms || !agreePrivacy) return setErr("이용약관 및 개인정보 처리방침에 동의해주세요.");
+    try {
+      await api.createRegistration({
+        name: form.name, employeeId: form.userId, team: form.jobType,
+        department: form.department, phone: form.phone, email: "",
+      });
+    } catch {}
     onSuccess();
   };
   return (
@@ -870,6 +910,22 @@ export default function App() {
   const hideKey = (dept: string) => `sw_popup_hide_${dept}`;
   const isHiddenToday = (dept: string) => localStorage.getItem(hideKey(dept)) === today;
   const hidePopupToday = (dept: string) => { localStorage.setItem(hideKey(dept), today); setShowPopup(false); };
+
+  // Supabase에서 초기 데이터 로드 (실패 시 목업 데이터 유지)
+  useEffect(() => {
+    const safe = <T,>(p: Promise<T>, fallback: T): Promise<T> => p.catch(() => fallback);
+    Promise.all([
+      safe(api.getPosts(),           INIT_POSTS   as any),
+      safe(api.getPopups(),          INIT_POPUPS  as any),
+      safe(api.getLooker(),          {} as any),
+      safe(api.getRegistrations(),   INIT_REGS    as any),
+    ]).then(([postsData, popupsData, lookerData, regsData]) => {
+      if (Array.isArray(postsData)  && postsData.length)  setPosts(postsData);
+      if (Array.isArray(popupsData) && popupsData.length) setPopups(popupsData);
+      if (lookerData && Object.keys(lookerData).length)   setLookerUrls(lookerData as LookerUrls);
+      if (Array.isArray(regsData)   && regsData.length)   setRegistrations(regsData);
+    });
+  }, []);
 
   // 로그인 상태 유지: 앱 초기 로드 시 복원
   const [_init] = useState(() => {
