@@ -7,7 +7,7 @@ import {
   Users, LogOut, X, Check, Download, Search, Edit, Trash2, ChevronUp,
   ChevronDown, Shield, BarChart2, UserCheck, Megaphone, Eye, EyeOff,
   Menu, ChevronRight, RefreshCw, FileText, Plus, Image,
-  Video, Youtube, Trash, ChevronLeft, Globe,
+  Video, Youtube, Trash, ChevronLeft, Globe, Archive, FileSpreadsheet,
 } from "lucide-react";
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -15,11 +15,11 @@ import {
 } from "recharts";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
-type ViewType = "dashboard" | "nps" | "delivery" | "sales" | "notice" | "regulations" | "cases" | "admin";
+type ViewType = "dashboard" | "nps" | "delivery" | "sales" | "notice" | "regulations" | "cases" | "resources" | "admin";
 type AdminTab = "looker" | "registrations" | "members" | "popup";
 type DashTab = "personal" | "team" | "center" | "national";
 type SortDir = "asc" | "desc";
-type PostSection = "notice" | "regulations" | "cases";
+type PostSection = "notice" | "regulations" | "cases" | "resources";
 
 interface User {
   id: string;
@@ -29,6 +29,7 @@ interface User {
   managedDept: string;  // "all"=전체관리자, 특정부서=부서관리자, ""=직원
   role: "employee" | "admin";
   password: string;
+  jobType?: string;     // 업무구분 (STAFF만 자료실 접근 가능)
 }
 interface Registration {
   id: string; name: string; employeeId: string; team: string;
@@ -39,7 +40,7 @@ interface Registration {
 interface PopupItem {
   dept: string; visible: boolean; title: string; content: string;
 }
-interface MediaItem { type: "image" | "video" | "youtube"; url: string; name?: string; }
+interface MediaItem { type: "image" | "video" | "youtube" | "excel"; url: string; name?: string; }
 interface Post {
   id: number; section: PostSection; title: string; date: string; author: string;
   content: string; media: MediaItem[]; department: string;
@@ -57,6 +58,7 @@ const ACCOUNTS: User[] = [
   { id: "e1", name: "김철수", employeeId: "EMP001", department: "평택TC",    managedDept: "", role: "employee", password: "1234" },
   { id: "e2", name: "이영희", employeeId: "EMP002", department: "인천TC",    managedDept: "", role: "employee", password: "1234" },
   { id: "e3", name: "박민준", employeeId: "EMP003", department: "목포TC",    managedDept: "", role: "employee", password: "1234" },
+  { id: "e4", name: "최스태프", employeeId: "EMP004", department: "평택TC", managedDept: "", role: "employee", password: "1234", jobType: "STAFF" },
   // 부서별 관리자
   { id: "pt", name: "평택TC 관리자",    employeeId: "ptadmin", department: "평택TC",    managedDept: "평택TC",    role: "admin", password: "sw3838" },
   { id: "ic", name: "인천TC 관리자",    employeeId: "icadmin", department: "인천TC",    managedDept: "인천TC",    role: "admin", password: "sw3838" },
@@ -70,9 +72,10 @@ const ACCOUNTS: User[] = [
 ];
 
 // helpers
-const isSuperAdmin = (u: User) => u.managedDept === "all";
-const isAdmin      = (u: User) => u.role === "admin";
-const userDept     = (u: User) => isSuperAdmin(u) ? "all" : u.managedDept || u.department;
+const isSuperAdmin     = (u: User) => u.managedDept === "all";
+const isAdmin          = (u: User) => u.role === "admin";
+const userDept         = (u: User) => isSuperAdmin(u) ? "all" : u.managedDept || u.department;
+const canSeeResources  = (u: User) => isAdmin(u) || u.jobType === "STAFF";
 
 // ── Filtering ──────────────────────────────────────────────────────────────────
 function filterPosts(posts: Post[], user: User): Post[] {
@@ -203,6 +206,13 @@ function MediaDisplay({ items }: { items: MediaItem[] }) {
         if (m.type === "image") return <div key={i} className="rounded-xl overflow-hidden bg-slate-100"><img src={m.url} alt={m.name || "이미지"} className="w-full max-h-80 object-contain" />{m.name && <p className="text-xs text-slate-400 px-3 py-1.5">{m.name}</p>}</div>;
         if (m.type === "video") return <div key={i} className="rounded-xl overflow-hidden bg-black"><video src={m.url} controls className="w-full max-h-72" /></div>;
         if (m.type === "youtube") { const e = getYoutubeEmbed(m.url); return e ? <div key={i} className="rounded-xl overflow-hidden relative" style={{ paddingBottom: "56.25%" }}><iframe src={e} title={m.name || "YouTube"} allowFullScreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} /></div> : null; }
+        if (m.type === "excel") return (
+          <a key={i} href={m.url} download={m.name} className="flex items-center gap-3 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors group">
+            <FileSpreadsheet size={20} className="text-emerald-600 shrink-0" />
+            <span className="text-sm text-emerald-700 font-medium flex-1 truncate">{m.name || "엑셀 파일"}</span>
+            <Download size={14} className="text-emerald-500 shrink-0 group-hover:text-emerald-700 transition-colors" />
+          </a>
+        );
         return null;
       })}
     </div>
@@ -223,9 +233,11 @@ function PostEditor({ section, post, dept, onSave, onClose }: {
   const [resolved, setResolved] = useState(post?.resolved ?? false);
   const [media, setMedia]       = useState<MediaItem[]>(post?.media ?? []);
   const [ytUrl, setYtUrl]       = useState(""); const [err, setErr] = useState("");
-  const imgRef = useRef<HTMLInputElement>(null); const vidRef = useRef<HTMLInputElement>(null);
+  const imgRef   = useRef<HTMLInputElement>(null);
+  const vidRef   = useRef<HTMLInputElement>(null);
+  const xlsRef   = useRef<HTMLInputElement>(null);
 
-  const addFile = (e: React.ChangeEvent<HTMLInputElement>, type: "image" | "video") => {
+  const addFile = (e: React.ChangeEvent<HTMLInputElement>, type: "image" | "video" | "excel") => {
     const file = e.target.files?.[0];
     if (file) { setMedia(prev => [...prev, { type, url: URL.createObjectURL(file), name: file.name }]); e.target.value = ""; }
   };
@@ -264,8 +276,10 @@ function PostEditor({ section, post, dept, onSave, onClose }: {
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={() => imgRef.current?.click()} className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-slate-200 rounded-lg hover:border-blue-300 hover:text-blue-600 transition-colors"><Image size={13} /> 사진</button>
               <button type="button" onClick={() => vidRef.current?.click()} className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-slate-200 rounded-lg hover:border-blue-300 hover:text-blue-600 transition-colors"><Video size={13} /> 동영상</button>
+              <button type="button" onClick={() => xlsRef.current?.click()} className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-slate-200 rounded-lg hover:border-emerald-300 hover:text-emerald-600 transition-colors"><FileSpreadsheet size={13} /> 엑셀</button>
               <input ref={imgRef} type="file" accept="image/*" className="hidden" onChange={e => addFile(e, "image")} />
               <input ref={vidRef} type="file" accept="video/*" className="hidden" onChange={e => addFile(e, "video")} />
+              <input ref={xlsRef} type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={e => addFile(e, "excel")} />
             </div>
             <div className="flex gap-2 mt-2">
               <input value={ytUrl} onChange={e => setYtUrl(e.target.value)} placeholder="YouTube URL 입력 (youtube.com/watch?v=...)" className={inp + " flex-1"} onKeyDown={e => e.key === "Enter" && addYt()} />
@@ -440,10 +454,11 @@ function PostListView({ section, posts, adminFlag, dept, onPostsChange, title, s
           {filtered.length === 0 && <div className="bg-white rounded-xl p-10 text-center text-sm text-slate-400">게시글이 없습니다.</div>}
           {filtered.map(p => (
             <button key={p.id} onClick={() => setSel(p)} className="w-full bg-white rounded-xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover:shadow-md hover:border-blue-200 transition-all text-left">
-              <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${section === "cases" ? "bg-red-50" : "bg-blue-50"}`}>
+              <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${section === "cases" ? "bg-red-50" : section === "resources" ? "bg-emerald-50" : "bg-blue-50"}`}>
                 {section === "notice" && <Bell size={16} className="text-blue-500" />}
                 {section === "regulations" && <FileText size={16} className="text-blue-500" />}
                 {section === "cases" && <AlertTriangle size={16} className="text-red-500" />}
+                {section === "resources" && <Archive size={16} className="text-emerald-500" />}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
@@ -452,7 +467,7 @@ function PostListView({ section, posts, adminFlag, dept, onPostsChange, title, s
                   {p.category && <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${catClass(p.category)}`}>{p.category}</span>}
                   {p.resolved && <span className="text-[10px] font-bold bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded">처리완료</span>}
                   {p.department !== "all" && <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">{p.department}</span>}
-                  {p.media.length > 0 && <span className="text-[10px] text-slate-400">{p.media.some(m => m.type === "image") ? "📷 " : ""}{p.media.some(m => m.type === "video") ? "🎬 " : ""}{p.media.some(m => m.type === "youtube") ? "▶" : ""}</span>}
+                  {p.media.length > 0 && <span className="text-[10px] text-slate-400">{p.media.some(m => m.type === "image") ? "📷 " : ""}{p.media.some(m => m.type === "video") ? "🎬 " : ""}{p.media.some(m => m.type === "youtube") ? "▶ " : ""}{p.media.some(m => m.type === "excel") ? "📊" : ""}</span>}
                 </div>
                 <p className="text-sm font-medium text-slate-800 truncate">{p.title}</p>
                 <p className="text-xs text-slate-400 mt-0.5">{p.author} · {p.date}</p>
@@ -670,7 +685,7 @@ function AdminView({ user, registrations, setRegistrations, popups, setPopups, l
 }
 
 // ── Sidebar ────────────────────────────────────────────────────────────────────
-const NAV_ITEMS: { view: ViewType; label: string; icon: React.ElementType }[] = [
+const NAV_ITEMS: { view: ViewType; label: string; icon: React.ElementType; staffOnly?: boolean }[] = [
   { view: "dashboard",   label: "대시보드",   icon: LayoutDashboard },
   { view: "nps",         label: "NPS",        icon: Star },
   { view: "delivery",    label: "납기준수율",  icon: Clock },
@@ -678,6 +693,7 @@ const NAV_ITEMS: { view: ViewType; label: string; icon: React.ElementType }[] = 
   { view: "notice",      label: "공지사항",   icon: Bell },
   { view: "regulations", label: "업무규정",   icon: BookOpen },
   { view: "cases",       label: "비정도사례", icon: AlertTriangle },
+  { view: "resources",   label: "자료실",     icon: Archive, staffOnly: true },
 ];
 function Sidebar({ current, setCurrent, user, onLogout, open, setOpen }: {
   current: ViewType; setCurrent: (v: ViewType) => void; user: User;
@@ -699,7 +715,7 @@ function Sidebar({ current, setCurrent, user, onLogout, open, setOpen }: {
           </div>
         </div>
         <nav className="flex-1 py-3 space-y-0.5 px-2 overflow-y-auto">
-          {NAV_ITEMS.map(item => (
+          {NAV_ITEMS.filter(item => !item.staffOnly || canSeeResources(user)).map(item => (
             <button key={item.view} onClick={() => { setCurrent(item.view); setOpen(false); }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs transition-colors ${current === item.view ? "bg-blue-600 text-white" : "text-slate-400 hover:text-white hover:bg-white/10"}`}>
               <item.icon size={15} className="shrink-0" /><span>{item.label}</span>
@@ -970,7 +986,7 @@ export default function App() {
   const activePopup  = getPopup(popups, currentUser);
   const adminFlag    = isAdmin(currentUser);
   const dept         = userDept(currentUser);
-  const PAGE_TITLE: Record<ViewType, string> = { dashboard: "대시보드", nps: "NPS", delivery: "납기준수율", sales: "매출", notice: "공지사항", regulations: "업무규정", cases: "비정도사례", admin: "관리자 페이지" };
+  const PAGE_TITLE: Record<ViewType, string> = { dashboard: "대시보드", nps: "NPS", delivery: "납기준수율", sales: "매출", notice: "공지사항", regulations: "업무규정", cases: "비정도사례", resources: "자료실", admin: "관리자 페이지" };
 
   return (
     <div className="flex h-screen bg-slate-100 overflow-hidden" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
@@ -999,6 +1015,12 @@ export default function App() {
           {currentView === "notice"      && <PostListView section="notice"      posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={setPosts} title="공지사항"   sub={`${dept === "all" ? "전체" : dept} 공지 및 안내사항`} />}
           {currentView === "regulations" && <PostListView section="regulations" posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={setPosts} title="업무규정"   sub={`${dept === "all" ? "전체" : dept} 표준 업무 절차 및 규정`} />}
           {currentView === "cases"       && <PostListView section="cases"       posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={setPosts} title="비정도사례" sub={`${dept === "all" ? "전체" : dept} 규정 위반 사례 공유`} />}
+          {currentView === "resources"   && canSeeResources(currentUser) && (
+            <PostListView section="resources" posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={setPosts} title="자료실" sub={`${dept === "all" ? "전체" : dept} 자료 (STAFF 전용)`} />
+          )}
+          {currentView === "resources"   && !canSeeResources(currentUser) && (
+            <div className="p-6 flex items-center justify-center h-64"><p className="text-slate-400 text-sm">STAFF 업무구분 회원만 접근 가능합니다.</p></div>
+          )}
           {currentView === "admin" && adminFlag && <AdminView user={currentUser} registrations={registrations} setRegistrations={setRegistrations} popups={popups} setPopups={setPopups} lookerUrls={lookerUrls} setLookerUrls={setLookerUrls} />}
           {currentView === "admin" && !adminFlag && <div className="p-6 flex items-center justify-center h-64"><p className="text-slate-400 text-sm">접근 권한이 없습니다.</p></div>}
         </main>
