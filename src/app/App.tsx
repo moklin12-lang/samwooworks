@@ -787,7 +787,7 @@ function PopupModal({ popup, onClose, onHideToday }: { popup: PopupItem; onClose
     </div>
   );
 }
-function SignupModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+function SignupModal({ onClose, onSuccess, onNewRegistration }: { onClose: () => void; onSuccess: () => void; onNewRegistration?: (r: Registration) => void }) {
   const [form, setForm] = useState({ userId: "", name: "", password: "", passwordConfirm: "", phone: "", department: "", jobType: "", license: "" });
   const [showPw, setShowPw] = useState(false); const [showPwC, setShowPwC] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false); const [agreePrivacy, setAgreePrivacy] = useState(false);
@@ -799,11 +799,22 @@ function SignupModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
     if (form.password.length < 4) return setErr("비밀번호는 4자 이상이어야 합니다.");
     if (!agreeTerms || !agreePrivacy) return setErr("이용약관 및 개인정보 처리방침에 동의해주세요.");
     try {
-      await api.createRegistration({
+      const created = await api.createRegistration({
         name: form.name, employeeId: form.userId, team: form.jobType,
-        department: form.department, phone: form.phone, email: "",
+        department: form.department, phone: form.phone, email: form.userId,
       });
-    } catch {}
+      // 생성된 registration을 App 상태에도 즉시 반영
+      if (created && onNewRegistration) onNewRegistration(created as Registration);
+    } catch (e) {
+      // API 실패 시에도 로컬 임시 등록 (재로드 시 사라질 수 있음)
+      console.error("가입 신청 저장 오류:", e);
+      if (onNewRegistration) onNewRegistration({
+        id: `tmp_${Date.now()}`, name: form.name, employeeId: form.userId,
+        team: form.jobType, department: form.department, phone: form.phone,
+        email: form.userId, status: "pending",
+        requestDate: new Date().toISOString().slice(0, 10),
+      });
+    }
     onSuccess();
   };
   return (
@@ -869,7 +880,7 @@ function FindPasswordModal({ onClose }: { onClose: () => void }) {
 }
 
 // ── Login Screen ───────────────────────────────────────────────────────────────
-function LoginScreen({ onLogin }: { onLogin: (id: string, pw: string, stay: boolean) => string | null }) {
+function LoginScreen({ onLogin, onNewRegistration }: { onLogin: (id: string, pw: string, stay: boolean) => string | null; onNewRegistration: (r: Registration) => void }) {
   const [id, setId] = useState(""); const [pw, setPw] = useState(""); const [err, setErr] = useState(""); const [showPw, setShowPw] = useState(false);
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
   const [modal, setModal] = useState<"signup"|"findId"|"findPw"|null>(null);
@@ -877,7 +888,7 @@ function LoginScreen({ onLogin }: { onLogin: (id: string, pw: string, stay: bool
   const submit = () => { const e = onLogin(id, pw, stayLoggedIn); if (e) setErr(e); };
   return (
     <div className="min-h-screen relative flex items-center justify-center" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
-      {modal === "signup" && <SignupModal onClose={() => setModal(null)} onSuccess={() => { setModal(null); setSignupDone(true); }} />}
+      {modal === "signup" && <SignupModal onClose={() => setModal(null)} onNewRegistration={onNewRegistration} onSuccess={() => { setModal(null); setSignupDone(true); }} />}
       {modal === "findId" && <FindIdModal onClose={() => setModal(null)} />}
       {modal === "findPw" && <FindPasswordModal onClose={() => setModal(null)} />}
       <div className="absolute inset-0 bg-slate-900">
@@ -996,6 +1007,12 @@ export default function App() {
       setCurrentView(isAdmin(user) ? "admin" : "dashboard");
       const dept = isSuperAdmin(user) ? "all" : user.managedDept || user.department;
       setShowPopup(!isHiddenToday(dept) && !isHiddenToday("all"));
+      // 관리자 로그인 시 최신 가입신청 목록 재조회
+      if (isAdmin(user)) {
+        api.getRegistrations().then(regs => {
+          if (Array.isArray(regs)) setRegistrations(regs);
+        }).catch(() => {});
+      }
       return null;
     }
     return "사원번호 또는 비밀번호가 올바르지 않습니다.";
@@ -1007,7 +1024,12 @@ export default function App() {
     setCurrentView("dashboard");
   };
 
-  if (!currentUser) return <LoginScreen onLogin={handleLogin} />;
+  if (!currentUser) return (
+    <LoginScreen
+      onLogin={handleLogin}
+      onNewRegistration={(reg) => setRegistrations(prev => [reg, ...prev.filter(r => r.id !== reg.id)])}
+    />
+  );
 
   const visiblePosts = filterPosts(posts, currentUser);
   const activePopup  = getPopup(popups, currentUser);
