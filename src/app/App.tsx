@@ -40,7 +40,7 @@ interface Registration {
 interface PopupItem {
   dept: string; visible: boolean; title: string; content: string;
 }
-interface MediaItem { type: "image" | "video" | "youtube" | "excel"; url: string; name?: string; }
+interface MediaItem { type: "image" | "video" | "youtube" | "document"; url: string; name?: string; }
 interface Post {
   id: number; section: PostSection; title: string; date: string; author: string;
   content: string; media: MediaItem[]; department: string;
@@ -143,6 +143,15 @@ const getYoutubeEmbed = (url: string) => {
   const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]+)/);
   return m ? `https://www.youtube.com/embed/${m[1]}` : url.includes("youtube.com/embed") ? url : null;
 };
+const getDocMeta = (name = "") => {
+  const ext = name.split(".").pop()?.toLowerCase() ?? "";
+  if (["xlsx","xls","csv"].includes(ext))           return { label: "Excel",       emoji: "📊", color: "emerald" };
+  if (["pptx","ppt"].includes(ext))                 return { label: "PowerPoint",  emoji: "📑", color: "orange"  };
+  if (["docx","doc"].includes(ext))                 return { label: "Word",        emoji: "📄", color: "blue"    };
+  if (["hwp","hwpx"].includes(ext))                 return { label: "한글",         emoji: "📝", color: "teal"    };
+  if (ext === "pdf")                                return { label: "PDF",         emoji: "📕", color: "red"     };
+  return { label: ext.toUpperCase() || "문서", emoji: "📁", color: "slate" };
+};
 const sevClass = (s?: string) => s === "심각" ? "bg-red-100 text-red-600" : "bg-amber-100 text-amber-600";
 const catClass = (c?: string) => (({ 배송: "bg-blue-100 text-blue-600", 안전: "bg-red-100 text-red-600", 서비스: "bg-emerald-100 text-emerald-600", 차량: "bg-amber-100 text-amber-600", 보안: "bg-purple-100 text-purple-600" } as Record<string,string>)[c ?? ""] || "bg-slate-100 text-slate-600");
 
@@ -206,13 +215,21 @@ function MediaDisplay({ items }: { items: MediaItem[] }) {
         if (m.type === "image") return <div key={i} className="rounded-xl overflow-hidden bg-slate-100"><img src={m.url} alt={m.name || "이미지"} className="w-full max-h-80 object-contain" />{m.name && <p className="text-xs text-slate-400 px-3 py-1.5">{m.name}</p>}</div>;
         if (m.type === "video") return <div key={i} className="rounded-xl overflow-hidden bg-black"><video src={m.url} controls className="w-full max-h-72" /></div>;
         if (m.type === "youtube") { const e = getYoutubeEmbed(m.url); return e ? <div key={i} className="rounded-xl overflow-hidden relative" style={{ paddingBottom: "56.25%" }}><iframe src={e} title={m.name || "YouTube"} allowFullScreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} /></div> : null; }
-        if (m.type === "excel") return (
-          <a key={i} href={m.url} download={m.name} className="flex items-center gap-3 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors group">
-            <FileSpreadsheet size={20} className="text-emerald-600 shrink-0" />
-            <span className="text-sm text-emerald-700 font-medium flex-1 truncate">{m.name || "엑셀 파일"}</span>
-            <Download size={14} className="text-emerald-500 shrink-0 group-hover:text-emerald-700 transition-colors" />
-          </a>
-        );
+        if (m.type === "document") {
+          const meta = getDocMeta(m.name);
+          const colorMap: Record<string, string> = { emerald: "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100", orange: "bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100", blue: "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100", teal: "bg-teal-50 border-teal-200 text-teal-700 hover:bg-teal-100", red: "bg-red-50 border-red-200 text-red-700 hover:bg-red-100", slate: "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100" };
+          const cls = colorMap[meta.color] ?? colorMap.slate;
+          return (
+            <a key={i} href={m.url} download={m.name} className={`flex items-center gap-3 px-4 py-3 border rounded-xl transition-colors group ${cls}`}>
+              <span className="text-xl shrink-0">{meta.emoji}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{m.name || "문서 파일"}</p>
+                <p className="text-xs opacity-60 mt-0.5">{meta.label} 파일</p>
+              </div>
+              <Download size={14} className="shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
+            </a>
+          );
+        }
         return null;
       })}
     </div>
@@ -237,7 +254,7 @@ function PostEditor({ section, post, dept, onSave, onClose }: {
   const vidRef   = useRef<HTMLInputElement>(null);
   const xlsRef   = useRef<HTMLInputElement>(null);
 
-  const addFile = (e: React.ChangeEvent<HTMLInputElement>, type: "image" | "video" | "excel") => {
+  const addFile = (e: React.ChangeEvent<HTMLInputElement>, type: "image" | "video" | "document") => {
     const file = e.target.files?.[0];
     if (file) { setMedia(prev => [...prev, { type, url: URL.createObjectURL(file), name: file.name }]); e.target.value = ""; }
   };
@@ -276,16 +293,16 @@ function PostEditor({ section, post, dept, onSave, onClose }: {
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={() => imgRef.current?.click()} className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-slate-200 rounded-lg hover:border-blue-300 hover:text-blue-600 transition-colors"><Image size={13} /> 사진</button>
               <button type="button" onClick={() => vidRef.current?.click()} className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-slate-200 rounded-lg hover:border-blue-300 hover:text-blue-600 transition-colors"><Video size={13} /> 동영상</button>
-              <button type="button" onClick={() => xlsRef.current?.click()} className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-slate-200 rounded-lg hover:border-emerald-300 hover:text-emerald-600 transition-colors"><FileSpreadsheet size={13} /> 엑셀</button>
+              <button type="button" onClick={() => xlsRef.current?.click()} className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-slate-200 rounded-lg hover:border-emerald-300 hover:text-emerald-600 transition-colors"><FileSpreadsheet size={13} /> 문서</button>
               <input ref={imgRef} type="file" accept="image/*" className="hidden" onChange={e => addFile(e, "image")} />
               <input ref={vidRef} type="file" accept="video/*" className="hidden" onChange={e => addFile(e, "video")} />
-              <input ref={xlsRef} type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={e => addFile(e, "excel")} />
+              <input ref={xlsRef} type="file" accept=".xlsx,.xls,.csv,.pptx,.ppt,.docx,.doc,.hwp,.hwpx,.pdf,.txt,.zip" className="hidden" onChange={e => addFile(e, "document")} />
             </div>
             <div className="flex gap-2 mt-2">
               <input value={ytUrl} onChange={e => setYtUrl(e.target.value)} placeholder="YouTube URL 입력 (youtube.com/watch?v=...)" className={inp + " flex-1"} onKeyDown={e => e.key === "Enter" && addYt()} />
               <button type="button" onClick={addYt} className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 shrink-0"><Youtube size={13} /> 추가</button>
             </div>
-            {media.length > 0 && <div className="mt-2 space-y-1.5">{media.map((m, i) => <div key={i} className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg">{m.type === "image" && <Image size={13} className="text-blue-500 shrink-0" />}{m.type === "video" && <Video size={13} className="text-purple-500 shrink-0" />}{m.type === "youtube" && <Youtube size={13} className="text-red-500 shrink-0" />}<span className="text-xs text-slate-600 flex-1 truncate">{m.name || m.url}</span><button type="button" onClick={() => setMedia(p => p.filter((_, j) => j !== i))} className="text-slate-400 hover:text-red-500"><Trash size={12} /></button></div>)}</div>}
+            {media.length > 0 && <div className="mt-2 space-y-1.5">{media.map((m, i) => <div key={i} className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg">{m.type === "image" && <Image size={13} className="text-blue-500 shrink-0" />}{m.type === "video" && <Video size={13} className="text-purple-500 shrink-0" />}{m.type === "youtube" && <Youtube size={13} className="text-red-500 shrink-0" />}{m.type === "document" && <span className="text-sm shrink-0">{getDocMeta(m.name).emoji}</span>}<span className="text-xs text-slate-600 flex-1 truncate">{m.name || m.url}</span><button type="button" onClick={() => setMedia(p => p.filter((_, j) => j !== i))} className="text-slate-400 hover:text-red-500"><Trash size={12} /></button></div>)}</div>}
           </div>
           {err && <p className="text-xs text-red-500 bg-red-50 rounded-lg px-3 py-2">{err}</p>}
           <div className="flex gap-2 pt-1">
@@ -396,7 +413,7 @@ function SalesView({ url }: { url: string }) {
 // ── Post List View ─────────────────────────────────────────────────────────────
 function PostListView({ section, posts, adminFlag, dept, onPostsChange, title, sub }: {
   section: PostSection; posts: Post[]; adminFlag: boolean; dept: string;
-  onPostsChange: (p: Post[]) => void; title: string; sub: string;
+  onPostsChange: (updater: (prev: Post[]) => Post[]) => void; title: string; sub: string;
 }) {
   const [sel, setSel] = useState<Post | null>(null);
   const [editing, setEditing] = useState<Post | null | undefined>(undefined);
@@ -404,20 +421,30 @@ function PostListView({ section, posts, adminFlag, dept, onPostsChange, title, s
   const cats = section === "regulations" ? ["전체", ...Array.from(new Set(posts.filter(p => p.section === section).map(p => p.category || "기타")))] : [];
   const filtered = posts.filter(p => p.section === section && (filter === "전체" || p.category === filter));
   const save = async (p: Post) => {
+    const isExisting = posts.some(x => x.id === p.id);
     try {
-      if (posts.find(x => x.id === p.id)) {
+      if (isExisting) {
         await api.updatePost(p.id, p);
-        onPostsChange(posts.map(x => x.id === p.id ? p : x));
+        onPostsChange(prev => prev.map(x => x.id === p.id ? p : x));
       } else {
         const created = await api.createPost(p);
-        onPostsChange([{ ...p, id: created.id }, ...posts]);
+        const saved = { ...p, id: created?.id ?? p.id };
+        onPostsChange(prev => [saved, ...prev.filter(x => x.id !== saved.id)]);
       }
-    } catch { onPostsChange(posts.find(x => x.id === p.id) ? posts.map(x => x.id === p.id ? p : x) : [p, ...posts]); }
+    } catch (e) {
+      console.error("게시글 저장 오류:", e);
+      // API 실패 시에도 로컬 상태에 즉시 반영
+      if (isExisting) {
+        onPostsChange(prev => prev.map(x => x.id === p.id ? p : x));
+      } else {
+        onPostsChange(prev => [p, ...prev.filter(x => x.id !== p.id)]);
+      }
+    }
   };
   const del = async (id: number) => {
     setSel(null);
     try { await api.deletePost(id); } catch {}
-    onPostsChange(posts.filter(p => p.id !== id));
+    onPostsChange(prev => prev.filter(p => p.id !== id));
   };
   return (
     <div className="p-4 sm:p-6 space-y-4">
@@ -467,7 +494,7 @@ function PostListView({ section, posts, adminFlag, dept, onPostsChange, title, s
                   {p.category && <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${catClass(p.category)}`}>{p.category}</span>}
                   {p.resolved && <span className="text-[10px] font-bold bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded">처리완료</span>}
                   {p.department !== "all" && <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">{p.department}</span>}
-                  {p.media.length > 0 && <span className="text-[10px] text-slate-400">{p.media.some(m => m.type === "image") ? "📷 " : ""}{p.media.some(m => m.type === "video") ? "🎬 " : ""}{p.media.some(m => m.type === "youtube") ? "▶ " : ""}{p.media.some(m => m.type === "excel") ? "📊" : ""}</span>}
+                  {p.media.length > 0 && <span className="text-[10px] text-slate-400">{p.media.some(m => m.type === "image") ? "📷 " : ""}{p.media.some(m => m.type === "video") ? "🎬 " : ""}{p.media.some(m => m.type === "youtube") ? "▶ " : ""}{p.media.some(m => m.type === "document") ? getDocMeta(p.media.find(m => m.type === "document")?.name).emoji : ""}</span>}
                 </div>
                 <p className="text-sm font-medium text-slate-800 truncate">{p.title}</p>
                 <p className="text-xs text-slate-400 mt-0.5">{p.author} · {p.date}</p>
@@ -1012,11 +1039,11 @@ export default function App() {
           {currentView === "nps"         && <NPSView url={lookerUrls.nps} />}
           {currentView === "delivery"    && <DeliveryView url={lookerUrls.delivery} />}
           {currentView === "sales"       && <SalesView url={lookerUrls.sales} />}
-          {currentView === "notice"      && <PostListView section="notice"      posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={setPosts} title="공지사항"   sub={`${dept === "all" ? "전체" : dept} 공지 및 안내사항`} />}
-          {currentView === "regulations" && <PostListView section="regulations" posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={setPosts} title="업무규정"   sub={`${dept === "all" ? "전체" : dept} 표준 업무 절차 및 규정`} />}
-          {currentView === "cases"       && <PostListView section="cases"       posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={setPosts} title="비정도사례" sub={`${dept === "all" ? "전체" : dept} 규정 위반 사례 공유`} />}
+          {currentView === "notice"      && <PostListView section="notice"      posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={(updater) => setPosts(updater)} title="공지사항"   sub={`${dept === "all" ? "전체" : dept} 공지 및 안내사항`} />}
+          {currentView === "regulations" && <PostListView section="regulations" posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={(updater) => setPosts(updater)} title="업무규정"   sub={`${dept === "all" ? "전체" : dept} 표준 업무 절차 및 규정`} />}
+          {currentView === "cases"       && <PostListView section="cases"       posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={(updater) => setPosts(updater)} title="비정도사례" sub={`${dept === "all" ? "전체" : dept} 규정 위반 사례 공유`} />}
           {currentView === "resources"   && canSeeResources(currentUser) && (
-            <PostListView section="resources" posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={setPosts} title="자료실" sub={`${dept === "all" ? "전체" : dept} 자료 (STAFF 전용)`} />
+            <PostListView section="resources" posts={visiblePosts} adminFlag={adminFlag} dept={dept} onPostsChange={(updater) => setPosts(updater)} title="자료실" sub={`${dept === "all" ? "전체" : dept} 자료 (STAFF 전용)`} />
           )}
           {currentView === "resources"   && !canSeeResources(currentUser) && (
             <div className="p-6 flex items-center justify-center h-64"><p className="text-slate-400 text-sm">STAFF 업무구분 회원만 접근 가능합니다.</p></div>
