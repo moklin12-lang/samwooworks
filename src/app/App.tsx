@@ -520,6 +520,24 @@ function AdminView({ user, registrations, setRegistrations, popups, setPopups, l
   const [editingReg, setEditingReg] = useState<Registration | null>(null);
   const [lookerDraft, setLookerDraft] = useState(lookerUrls);
   const [selPopupDept, setSelPopupDept] = useState(isSuperAdmin(user) ? "all" : user.managedDept);
+  const [regsLoading, setRegsLoading] = useState(false);
+
+  // 관리자 페이지 마운트 시 최신 가입신청 불러오기
+  useEffect(() => {
+    setRegsLoading(true);
+    api.getRegistrations()
+      .then(regs => { if (Array.isArray(regs)) setRegistrations(regs); })
+      .catch(() => {})
+      .finally(() => setRegsLoading(false));
+  }, []);
+
+  const refreshRegs = () => {
+    setRegsLoading(true);
+    api.getRegistrations()
+      .then(regs => { if (Array.isArray(regs)) setRegistrations(regs); })
+      .catch(() => {})
+      .finally(() => setRegsLoading(false));
+  };
 
   const myRegs = filterRegs(registrations, user);
   const pending = myRegs.filter(r => r.status === "pending");
@@ -612,9 +630,17 @@ function AdminView({ user, registrations, setRegistrations, popups, setPopups, l
       {/* Registrations */}
       {tab === "registrations" && (
         <div className="space-y-3">
-          {isSuperAdmin(user) && <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-3 shadow-sm border border-slate-100"><Globe size={14} className="text-blue-500 shrink-0" /><span className="text-xs text-slate-600 font-medium">전체 부서 가입 신청 관리 중</span><span className="ml-auto text-xs text-slate-400">{myRegs.length}건</span></div>}
+          <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-3 shadow-sm border border-slate-100">
+            {isSuperAdmin(user) ? <><Globe size={14} className="text-blue-500 shrink-0" /><span className="text-xs text-slate-600 font-medium">전체 부서 가입 신청 관리 중</span></> : <><UserCheck size={14} className="text-blue-500 shrink-0" /><span className="text-xs text-slate-600 font-medium">{user.managedDept} 가입 신청</span></>}
+            <span className="text-xs text-slate-400">{myRegs.length}건</span>
+            <button onClick={refreshRegs} disabled={regsLoading}
+              className="ml-auto flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors disabled:opacity-50">
+              <RefreshCw size={12} className={regsLoading ? "animate-spin" : ""} />
+              {regsLoading ? "로딩 중..." : "새로고침"}
+            </button>
+          </div>
           {pending.length > 0 && <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center gap-2"><UserCheck size={16} className="text-amber-600 shrink-0" /><p className="text-xs text-amber-700">승인 대기 <span className="font-bold">{pending.length}건</span></p></div>}
-          {myRegs.length === 0 && <div className="bg-white rounded-xl p-8 text-center text-sm text-slate-400">해당 부서의 가입 신청이 없습니다.</div>}
+          {myRegs.length === 0 && !regsLoading && <div className="bg-white rounded-xl p-8 text-center text-sm text-slate-400">해당 부서의 가입 신청이 없습니다.</div>}
           {myRegs.map(reg => (
             <div key={reg.id} className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
               {editingReg?.id === reg.id ? (
